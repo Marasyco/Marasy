@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/home_icon"
+        android:title="@string/home"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/search_icon"
+        android:title="@string/search"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/favorite"
+        android:icon="@drawable/baseline_favorite_border_24"
+        android:title="@string/favorites"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/notifications"
+        android:icon="@drawable/notifications_icon"
+        android:title="@string/notifications"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/profile_icon"
+        android:title="@string/profile"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/aboutUs"
+        android:icon="@drawable/about_us"
+        android:title="@string/about_us"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/warranties"
+        android:icon="@drawable/warranties"
+        android:title="@string/warranties"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/privacyPolicy"
+        android:icon="@drawable/privacy"
+        android:title="@string/privacy"
+        app:iconTint="@color/black_text" />
+    <item
+        android:id="@+id/contactUs"
+        android:icon="@drawable/support"
+        android:title="@string/support"
+        app:iconTint="@color/black_text" />
+
+    <item
+        android:id="@+id/language"
+        android:icon="@drawable/language"
+        android:title="@string/language"
+        app:iconTint="@color/black_text" />
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/logout"
+        android:title="@string/logout"
+        app:iconTint="@color/black_text" />
+</menu>

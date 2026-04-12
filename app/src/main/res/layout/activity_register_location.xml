@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/orange"
+    tools:context=".ui.activities.RegisterLocationActivity"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/included_tap"
+            layout="@layout/login_app_bar"
+            />
+
+        <TextView
+            android:id="@+id/signInLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_new_account"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/included_tap"
+            android:textSize="18sp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="25dp"
+            android:fontFamily="@font/cairo_bold"
+            />
+        <androidx.cardview.widget.CardView
+            app:layout_constraintTop_toBottomOf="@id/signInLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="40dp"
+            app:cardCornerRadius="24dp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="50dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="45dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/address"
+                    android:textColor="@color/orange"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="22dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/choose_location_from_map"
+                    android:textColor="@color/orange"
+                    android:textSize="15sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="15sp"
+                    android:background="@drawable/custom_edit_text">
+
+                    <TextView
+                        android:id="@+id/mapLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/empty_edit_text"
+                        android:fontFamily="@font/cairo_bold"
+                        android:hint="*"
+                        android:layout_marginStart="10dp"
+                        android:textColorHint="#87010C"
+                        android:singleLine="true"
+                        android:textColor="#7F7F7F"
+                        android:textSize="11sp"
+                        app:layoutDescription="@id/ownerNameET"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/mapIcon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/mapIcon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="20sp"
+                        android:src="@drawable/crosshair"
+                        app:tint="@color/orange"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="45dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/choose_your_location_manually"
+                    android:textColor="#9F9F9F"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/address_name"
+                    android:textColor="@color/orange"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/titleEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/custom_edit_text"
+                    android:fontFamily="@font/cairo_regular"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginHorizontal="25dp"
+                    tools:text="Waleed"
+                    android:textColor="@color/black_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/city"
+                    android:textColor="@color/orange"
+                    android:textSize="15sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="@drawable/custom_city_et"
+                    >
+                    <Spinner
+                        app:layoutDescription="@id/ownerNameET"
+                        android:id="@+id/sectorCity"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/empty_edit_text"
+                        android:textSize="16sp"
+                        android:textColor="#7F7F7F"
+                        android:fontFamily="@font/cairo_bold"
+                        android:paddingStart="15sp"
+                        android:singleLine="true"
+                        android:paddingEnd="15sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="22dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/area"
+                    android:textColor="@color/orange"
+                    android:textSize="15sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="@drawable/custom_edit_text">
+
+                    <Spinner
+                        android:id="@+id/sectorArea"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/empty_edit_text"
+                        android:textSize="16sp"
+                        android:textColor="#7F7F7F"
+                        android:fontFamily="@font/cairo_bold"
+                        android:paddingStart="15sp"
+                        android:singleLine="true"
+                        android:paddingEnd="15sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="22dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/address_in_detail"
+                    android:textColor="@color/orange"
+                    android:textSize="15sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="@drawable/custom_edit_text">
+
+                    <EditText
+                        android:id="@+id/addressInDetailEt"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/empty_edit_text"
+                        android:fontFamily="@font/cairo_bold"
+                        android:padding="15dp"
+                        android:singleLine="true"
+                        android:textColor="#7F7F7F"
+                        android:textSize="16sp"
+                        app:layoutDescription="@id/establishmentNameET"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/uploadePhotContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:visibility="gone"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="@drawable/custom_edit_text">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/empty_edit_text"
+                        android:fontFamily="@font/cairo_bold"
+                        android:paddingStart="15sp"
+                        android:paddingEnd="15sp"
+                        android:singleLine="true"
+                        android:text="@string/your_shop_s_photo"
+                        android:textColor="#7F7F7F"
+                        android:textSize="12sp"
+                        app:layoutDescription="@id/establishmentNameET"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/uplPhto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/custom_edit_text"
+                        android:backgroundTint="@color/orange"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/btnimgdone"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="@color/white"
+                            android:src="@drawable/upload" />
+
+                        <TextView
+                            android:id="@+id/txtphto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/upload"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+
+                            />
+
+
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/termsssAcon"
+                    android:layout_marginTop="30dp">
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/termsAndConditionsCheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="10dp"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/approveText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/cairo_regular"
+                        android:text="@string/i_approve_on"
+                        android:textColor="#7F7F7F"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/termsAndConditionsCheckbox"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/termsAndConditions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/cairo_bold"
+                        android:text="@string/terms_and_conditions"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/approveText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/continueBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_margin="25dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/next"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/orange"
+                    app:cornerRadius="25dp" />
+
+
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

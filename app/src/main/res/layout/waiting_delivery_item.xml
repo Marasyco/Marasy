@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/clientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/cairo_bold"
+            android:textColor="@color/black_text"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Waleed Khater" />
+
+        <TextView
+            android:id="@+id/ammanText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="@string/amman"
+            android:textColor="@color/black_text"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/clientName"
+            app:layout_constraintTop_toBottomOf="@id/clientName" />
+
+
+        <ImageView
+            android:id="@+id/locationButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/orange_circle"
+            android:padding="4dp"
+            android:src="@drawable/baseline_location_pin_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/truckImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:scaleX="2.0"
+            android:scaleY="2.0"
+            app:layout_constraintStart_toStartOf="@id/ammanText"
+            app:layout_constraintTop_toBottomOf="@id/ammanText"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:tint="@color/orange"
+
+            app:lottie_rawRes="@raw/truck_animation" />
+
+        <TextView
+            android:id="@+id/orderNumberTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/cairo_bold"
+            android:textColor="@color/black_text"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/truckImage"
+            app:layout_constraintTop_toBottomOf="@id/truckImage"
+            tools:text="#2062" />
+
+        <TextView
+            android:id="@+id/orderState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_bold"
+            android:textColor="@color/orange"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/truckImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/truckImage"
+            app:layout_constraintTop_toTopOf="@id/truckImage"
+            tools:text="Waiting delivery" />
+
+        <TextView
+            android:id="@+id/addressTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/cairo_bold"
+            android:maxLines="2"
+            android:textColor="@color/black_text"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/orderState"
+            app:layout_constraintTop_toBottomOf="@id/orderState"
+            tools:text="amman, om uthina " />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#F9F9F9"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addressTv">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_bold"
+                        android:text="@string/number_of_items"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/black_text"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/numberOfItemsTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_bold"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black_text"
+                        android:textSize="16sp"
+                        tools:text="10" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_bold"
+                        android:text="@string/order_price"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/black_text"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/orderPriceTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_bold"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black_text"
+                        android:textSize="16sp"
+                        tools:text="120 JD" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deliveryButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/orange"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/start_delivering"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:cornerRadius="10dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

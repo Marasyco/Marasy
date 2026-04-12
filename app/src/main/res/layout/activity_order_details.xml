@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/otp_bg"
+    tools:context=".ui.activities.OrderDetailsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <include
+            android:id="@+id/includeTab"
+            layout="@layout/inner_bar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/includeTab">
+
+            <!-- Lottie Animation View -->
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/delivery_animation" />
+
+            <!-- Order ID -->
+            <TextView
+                android:id="@+id/orderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_bold"
+                android:text="#TFM231"
+                android:textColor="@color/orange"
+                android:textSize="20sp" />
+
+            <!-- Order Time -->
+            <TextView
+                android:id="@+id/orderTimeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/cairo_bold"
+                android:text="طلبت يوم الثلاثاء - 24 - ربيع الاول - 2024"
+                android:textColor="#636363"
+                android:textSize="14sp" />
+
+            <!-- Order Details Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/white"
+                app:strokeColor="@color/grey_light"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
+
+                    <!-- Delivery Time -->
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layoutDirection="ltr"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:id="@+id/receivedTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/cairo_bold"
+                            android:gravity="center"
+                            android:text="@string/recieved"
+                            android:textColor="@color/grey_light"
+                            android:textSize="11sp"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            app:layout_constraintEnd_toStartOf="@id/makingTv"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintWidth_percent="0.25" />
+
+                        <ImageView
+                            android:id="@+id/receivedImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/order_progress"
+                            app:layout_constraintEnd_toEndOf="@id/receivedTv"
+                            app:layout_constraintStart_toStartOf="@id/receivedTv"
+                            app:layout_constraintTop_toBottomOf="@id/receivedTv" />
+
+                        <View
+                            android:id="@+id/line1"
+                            android:layout_width="0dp"
+                            android:layout_height="3dp"
+                            android:background="@color/grey_light"
+                            app:layout_constraintBottom_toBottomOf="@id/receivedImage"
+                            app:layout_constraintEnd_toStartOf="@id/makingImage"
+                            app:layout_constraintStart_toEndOf="@id/receivedImage"
+                            app:layout_constraintTop_toTopOf="@id/receivedImage" />
+
+                        <TextView
+                            android:id="@+id/makingTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/cairo_bold"
+                            android:gravity="center"
+                            android:text="@string/making"
+                            android:textColor="@color/grey_light"
+                            android:textSize="11sp"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            app:layout_constraintStart_toEndOf="@id/receivedTv"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintWidth_percent="0.25" />
+
+                        <ImageView
+                            android:id="@+id/makingImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/order_progress"
+                            app:layout_constraintEnd_toEndOf="@id/makingTv"
+                            app:layout_constraintStart_toStartOf="@id/makingTv"
+                            app:layout_constraintTop_toBottomOf="@id/makingTv" />
+
+                        <TextView
+                            android:id="@+id/deliveringTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/cairo_bold"
+                            android:gravity="center"
+                            android:text="@string/delivering"
+                            android:textColor="@color/grey_light"
+                            android:textSize="11sp"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            app:layout_constraintStart_toEndOf="@id/makingTv"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintWidth_percent="0.25" />
+
+                        <ImageView
+                            android:id="@+id/deliveringImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/order_progress"
+                            app:layout_constraintEnd_toEndOf="@id/deliveringTv"
+                            app:layout_constraintStart_toStartOf="@id/deliveringTv"
+                            app:layout_constraintTop_toBottomOf="@id/deliveringTv" />
+
+                        <View
+                            android:id="@+id/line2"
+                            android:layout_width="0dp"
+                            android:layout_height="3dp"
+                            android:background="@color/grey_light"
+                            app:layout_constraintBottom_toBottomOf="@id/deliveringImage"
+                            app:layout_constraintEnd_toStartOf="@id/deliveredImage"
+                            app:layout_constraintStart_toEndOf="@id/makingImage"
+                            app:layout_constraintTop_toTopOf="@id/deliveringImage" />
+
+                        <TextView
+                            android:id="@+id/deliveredTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/cairo_bold"
+                            android:gravity="center"
+                            android:text="@string/delivered"
+                            android:textColor="@color/grey_light"
+                            android:textSize="11sp"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintWidth_percent="0.25" />
+
+                        <ImageView
+                            android:id="@+id/deliveredImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/order_progress"
+                            app:layout_constraintEnd_toEndOf="@id/deliveredTv"
+                            app:layout_constraintStart_toStartOf="@id/deliveredTv"
+                            app:layout_constraintTop_toBottomOf="@id/deliveredTv" />
+
+                        <View
+                            android:id="@+id/line3"
+                            android:layout_width="0dp"
+                            android:layout_height="3dp"
+                            android:background="@color/grey_light"
+                            app:layout_constraintBottom_toBottomOf="@id/deliveredImage"
+                            app:layout_constraintEnd_toStartOf="@id/deliveredImage"
+                            app:layout_constraintStart_toEndOf="@id/deliveringImage"
+                            app:layout_constraintTop_toTopOf="@id/deliveredImage" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/orderText1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/cairo_bold"
+                        android:text="تم استلام الطلب وبانتظار قرب وقت التجهيز"
+                        android:textColor="@color/black_text"
+                        android:textSize="13sp"
+                        android:visibility="visible" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/reOrderButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:backgroundTint="@color/orange"
+                            android:fontFamily="@font/cairo_bold"
+                            android:text="@string/order_again"
+                            android:layout_marginHorizontal="24dp"
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/rateButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+
+                            android:backgroundTint="@color/orange"
+                            android:fontFamily="@font/cairo_bold"
+                            android:text="@string/rate_order"
+                            android:layout_marginHorizontal="24dp"
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/employeeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/ourStatusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/cairo_bold"
+                            android:text="نقوم الان بتسوق طلبك"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/employeeStatusText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/cairo_bold"
+                            android:text="يقوم Amr Darawsheh بتسوق طلبك"
+                            android:textColor="#444444"
+                            android:textSize="13sp"
+                            app:layout_constraintStart_toStartOf="@id/ourStatusText"
+                            app:layout_constraintTop_toBottomOf="@id/ourStatusText" />
+
+                        <TextView
+                            android:id="@+id/orderRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/cairo_regular"
+                            android:text="4.9"
+                            android:textColor="#A7A9B7"
+                            android:textSize="13sp"
+                            app:layout_constraintStart_toStartOf="@id/employeeStatusText"
+                            app:layout_constraintTop_toBottomOf="@id/employeeStatusText" />
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="5dp"
+                            android:src="@drawable/star"
+                            app:layout_constraintBottom_toBottomOf="@id/orderRating"
+                            app:layout_constraintStart_toEndOf="@id/orderRating"
+                            app:layout_constraintTop_toTopOf="@id/orderRating" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/employeeStatusText">
+
+                            <ImageView
+                                android:id="@+id/whatsAppButton"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@drawable/whatsapp"
+                                app:tint="@color/orange"/>
+
+                            <ImageView
+                                android:id="@+id/callButton"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="10dp"
+                                android:src="@drawable/call_circle"
+                                app:tint="@color/orange"/>
+
+
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/grey_light" />
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/delivery_fee"
+                    android:textColor="@color/black_text"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/deliveryFees"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="20.00 JD"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_text"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/grey_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/final_total"
+                    android:textColor="@color/black_text"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/totalPriceTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="220.00 JD"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_text"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

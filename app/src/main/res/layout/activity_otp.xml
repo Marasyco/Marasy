@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/otp_bg"
+    tools:context=".ui.activities.OtpActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/cairo_bold"
+            android:text="@string/one_time_password"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/orange_circle"
+            android:padding="4dp"
+            android:src="@drawable/baseline_arrow_forward_24"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/otp_image" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/cairo_bold"
+        android:text="@string/verification_code"
+        android:textColor="@color/orange"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:id="@+id/editPhoneButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/orange_circle"
+            android:padding="8dp"
+            android:src="@drawable/edit"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/phoneNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="+962789105999"
+            android:textColor="@color/black_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/cairo_regular"
+        android:text="@string/we_will_send_you_a_verifcation_code"
+        android:textColor="@color/black_text"
+        android:textSize="12sp" />
+
+    <com.otpview.OTPTextView
+        android:layoutDirection="ltr"
+        android:id="@+id/otpBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/black"
+        app:box_margin="12dp"
+        app:height="45dp"
+        app:length="4"
+        app:otp_box_background_active="@drawable/otp_box"
+        app:otp_box_background_inactive="@drawable/otp_box"
+        app:otp_text_size="20sp"
+        app:width="45dp"
+        tools:otp="1234" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sendButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/orange"
+        android:fontFamily="@font/cairo_bold"
+        android:text="@string/send"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:cornerRadius="25dp" />
+</LinearLayout>
