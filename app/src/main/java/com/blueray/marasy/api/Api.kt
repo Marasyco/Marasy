@@ -42,7 +42,8 @@ interface Api {
     @POST("app/login-user")
     suspend fun loginUser(
         @Part("phone") phone: RequestBody,
-        @Part("lang") lang: RequestBody
+        @Part("lang") lang: RequestBody,
+        @Part("player_id") playerId: RequestBody
     ): Response<MessageResponse>
 
     @Multipart
@@ -53,27 +54,38 @@ interface Api {
         @Part("lang") lang: RequestBody
     ): Response<UserLoginResponse>
 
+    @Multipart
     @POST("app/slider1InHomePage")
-    suspend fun homeSlider(): HomeSliderResponse
+    suspend fun homeSlider(
+        @Part("lang") lang: RequestBody
+    ): HomeSliderResponse
 
+    @Multipart
     @POST("app/get-main-department")
-    suspend fun getCategories(): CategoriesResponse
+    suspend fun getCategories(
+        @Part("lang") lang: RequestBody
+    ): CategoriesResponse
 
+    @Multipart
     @POST("app/getTradeMarks")
-    suspend fun getTrademarks(): TrademarksResponse
+    suspend fun getTrademarks(
+        @Part("lang") lang: RequestBody
+    ): TrademarksResponse
 
     @Multipart
     @POST("app/get-sub-department")
     suspend fun getSubCategories(
         @Part("uid") uid: RequestBody,
-        @Part("parent_id") parent_id: RequestBody
+        @Part("parent_id") parent_id: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetSubCategoriesResponse
 
     @Multipart
     @POST("app/get-product")
     suspend fun getProductDetails(
         @Part("uid") uid: RequestBody,
-        @Part("pid") pid: RequestBody
+        @Part("pid") pid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): ProductDetailsResponse
 
     @Multipart
@@ -83,6 +95,7 @@ interface Api {
         @Part("category") category: RequestBody,
         @Part("sub_category") sub_category: RequestBody,
         @Part("page") page: RequestBody,
+        @Part("lang") lang: RequestBody,
     ): GetProductsResponse
 
     @Multipart
@@ -91,6 +104,7 @@ interface Api {
         @Part("uid") uid: RequestBody,
         @Part("trade_mark") trade_mark: RequestBody,
         @Part("page") page: RequestBody,
+        @Part("lang") lang: RequestBody,
     ): GetProductsResponse
 
     @Multipart
@@ -115,19 +129,22 @@ interface Api {
     @Multipart
     @POST("app/get-fav-products")
     suspend fun getFavoriteProducts(
-        @Part("uid") uid: RequestBody
+        @Part("uid") uid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetFavoriteProductsResponse
 
     @Multipart
     @POST("getMyNotifications")
     suspend fun getMyNotifications(
-        @Part("uid") uid: RequestBody
+        @Part("uid") uid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetNotificationResponse
 
     @Multipart
     @POST("app/view-cart")
     suspend fun viewCart(
-        @Part("uid") uid: RequestBody
+        @Part("uid") uid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): ViewCartResponse
 
     @Multipart
@@ -151,14 +168,16 @@ interface Api {
     @Multipart
     @POST("app/get-my-address")
     suspend fun getMyAddresses(
-        @Part("uid") uid: RequestBody
+        @Part("uid") uid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetMyAddressResponse
 
 
     @Multipart
     @POST("app/view-user-profile")
     suspend fun viewProfile(
-        @Part("uid") uid: RequestBody
+        @Part("uid") uid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): ViewProfileResponse
 
     @Multipart
@@ -167,6 +186,7 @@ interface Api {
         @Part("uid") uid: RequestBody,
         @Part("order_id") order_id: RequestBody,
         @Part("payment_method") payment_method: RequestBody,
+        @Part("note") note: RequestBody,
         @Part("lang") lang: RequestBody,
     ): Response<MessageResponse>
 
@@ -176,7 +196,8 @@ interface Api {
         @Part("uid") uid: RequestBody,
         @Part("search_text") search_text: RequestBody,
         @Part("page") page: RequestBody,
-        @Part("search_flag") search_flag: RequestBody
+        @Part("search_flag") search_flag: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetProductsResponse
 
 
@@ -189,25 +210,31 @@ interface Api {
         @Part("lang") lang: RequestBody,
     ): MessageResponse
 
+    @Multipart
     @POST("app/getSectors")
     suspend fun getSectors(
-
+        @Part("lang") lang: RequestBody
     ): GetSectorsResponse
 
     @Multipart
     @POST("app/getSectors")
     suspend fun getSubSectors(
-        @Part("parent_tid") parent_tid: RequestBody
+        @Part("parent_tid") parent_tid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetSectorsResponse
 
     @Multipart
     @POST("app/getCities")
     suspend fun getAreas(
-        @Part("parent_tid") parent_tid: RequestBody
+        @Part("parent_tid") parent_tid: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetCitiesResponse
 
+    @Multipart
     @POST("app/getCities")
-    suspend fun getCities(): GetCitiesResponse
+    suspend fun getCities(
+        @Part("lang") lang: RequestBody
+    ): GetCitiesResponse
 
     @Multipart
     @POST("app/add-user")
@@ -238,14 +265,16 @@ interface Api {
     suspend fun setDefaultAddress(
         @Part("uid") uid: RequestBody,
         @Part("profile_id") profile_id: RequestBody,
-        @Part("as_default") as_default: RequestBody
+        @Part("as_default") as_default: RequestBody,
+        @Part("lang") lang: RequestBody
     ): MessageResponse
 
     @Multipart
     @POST("app/delete-address-profile")
     suspend fun deleteAddress(
         @Part("uid") uid: RequestBody,
-        @Part("profile_id") profile_id: RequestBody
+        @Part("profile_id") profile_id: RequestBody,
+        @Part("lang") lang: RequestBody
     ): MessageResponse
 
     @Multipart
@@ -257,21 +286,25 @@ interface Api {
         @Part("lat") lat: RequestBody,
         @Part("lon") lon: RequestBody,
         @Part("city_and_area") city_and_area: RequestBody,
+        @Part("lang") lang: RequestBody,
     ): MessageResponse
 
+    @Multipart
     @POST("app/aboutUs")
     suspend fun aboutUs(
-
+        @Part("lang") lang: RequestBody
     ): AboutUsResponse
 
+    @Multipart
     @POST("app/privacyPolicies")
     suspend fun privacyPolicy(
-
+        @Part("lang") lang: RequestBody
     ): PrivacyPolicyResponse
 
+    @Multipart
     @POST("app/termsAndConditions")
     suspend fun termsAndConditions(
-
+        @Part("lang") lang: RequestBody
     ): PrivacyPolicyResponse
 
     @Multipart
@@ -359,7 +392,8 @@ interface Api {
     @Multipart
     @POST("app/get-address-details")
     suspend fun getAddressDetails(
-        @Part("profile_id") profile_id: RequestBody
+        @Part("profile_id") profile_id: RequestBody,
+        @Part("lang") lang: RequestBody
     ): GetAddressDetailsResponse
 
     @Multipart
@@ -372,6 +406,7 @@ interface Api {
         @Part("detailed_address") detailed_address: RequestBody,
         @Part("lat") lat: RequestBody,
         @Part("lon") lon: RequestBody,
+        @Part("lang") lang: RequestBody,
     ): MessageResponse
 
     @Multipart
@@ -380,6 +415,7 @@ interface Api {
         @Part("uid") uid: RequestBody,
         @Part("full_name") full_name: RequestBody,
         @Part("email") email: RequestBody,
+        @Part("lang") lang: RequestBody,
     ): MessageResponse
 
     @Multipart
@@ -393,13 +429,24 @@ interface Api {
     @POST("app/view-order-details")
     suspend fun viewOrderDetails(
         @Part("uid") uid: RequestBody,
-        @Part("order_id") order_id: RequestBody
+        @Part("order_id") order_id: RequestBody,
+        @Part("lang") lang: RequestBody
     ): ViewOrderDetailsResponse
 
     @Multipart
     @POST("app/reorder")
     suspend fun reOrder(
         @Part("uid") uid: RequestBody,
-        @Part("order_id") order_id: RequestBody
+        @Part("order_id") order_id: RequestBody,
+        @Part("lang") lang: RequestBody
     ): ReOrderResponse
+
+    @Multipart
+    @POST("app/contact-us")
+    suspend fun contactUs(
+        @Part("phone") phone: RequestBody,
+        @Part("notes") notes: RequestBody,
+        @Part("full_name") full_name: RequestBody,
+        @Part("lang") lang: RequestBody
+    ): Response<MessageResponse>
 }

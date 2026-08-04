@@ -51,6 +51,9 @@ class CartItemsAdapter(val listener: CartItemListener) :
             price.text = item.total_unit_price + " JD"
             quantity.text = item.quantity.toString()
 
+            minusButton.isEnabled = item.quantity > 1
+            minusButton.alpha = if (item.quantity > 1) 1f else 0.3f
+
             plusButton.setOnClickListener {
                 quantity.text = (item.quantity + 1).toString()
                 listener.onQuantityChange(
@@ -65,8 +68,6 @@ class CartItemsAdapter(val listener: CartItemListener) :
                         item.order_item_id,
                         quantity.text.toString(),
                     )
-                } else {
-                    listener.onItemDelete(item.order_item_id)
                 }
             }
 

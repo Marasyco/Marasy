@@ -84,3 +84,17 @@ data class MastercardCardExpiry(
     val month: String,
     val year: String
 )
+
+data class MastercardPayRequest(
+    val apiOperation: String = "PAY",
+    val session: MastercardPaySessionReference,
+    val sourceOfFunds: MastercardPaySourceOfFunds = MastercardPaySourceOfFunds()
+)
+
+data class MastercardPaySessionReference(
+    val id: String
+)
+
+data class MastercardPaySourceOfFunds(
+    val type: String = "CARD"
+)

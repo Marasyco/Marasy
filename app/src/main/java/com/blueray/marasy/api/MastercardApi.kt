@@ -2,9 +2,11 @@ package com.blueray.marasy.api
 
 import com.blueray.marasy.model.MastercardCardUpdateRequest
 import com.blueray.marasy.model.MastercardInitiateCheckoutRequest
+import com.blueray.marasy.model.MastercardPayRequest
 import com.blueray.marasy.model.MastercardSessionResponse
 import com.blueray.marasy.model.MastercardUpdateSessionRequest
 import com.blueray.marasy.model.MastercardUpdateSessionResponse
+import okhttp3.ResponseBody
 import okhttp3.Credentials
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,6 +14,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -43,13 +46,29 @@ interface MastercardApi {
         @Path("sessionId") sessionId: String,
         @Body cardData: MastercardCardUpdateRequest
     ): Response<MastercardUpdateSessionResponse>
+
+    @GET("api/rest/version/100/merchant/{merchantId}/session/{sessionId}")
+    suspend fun retrieveSession(
+        @Path("merchantId") merchantId: String,
+        @Path("sessionId") sessionId: String
+    ): Response<ResponseBody>
+
+    @PUT("api/rest/version/100/merchant/{merchantId}/order/{orderId}/transaction/{transactionId}")
+    suspend fun payWithSession(
+        @Path("merchantId") merchantId: String,
+        @Path("orderId") orderId: String,
+        @Path("transactionId") transactionId: String,
+        @Body request: MastercardPayRequest
+    ): Response<ResponseBody>
 }
 
 object MastercardApiClient {
-    private const val BASE_URL = "https://test-network.mtf.gateway.mastercard.com/"
-    private const val MERCHANT_ID = "test12122024"
-    private const val API_USERNAME = "merchant.test12122024"
-    private const val API_PASSWORD = "0cb74bdcb05329641aa7bed1caff4e8a"
+    const val GATEWAY_HOST = "https://ap-gateway.mastercard.com"
+    const val MERCHANT_ID = "9587188648EP"
+
+    private const val BASE_URL = "$GATEWAY_HOST/"
+    private const val API_USERNAME = "merchant.9587188648EP"
+    private const val API_PASSWORD = "e58521fc6ddf5517069e11f188bcadc5"
     
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)

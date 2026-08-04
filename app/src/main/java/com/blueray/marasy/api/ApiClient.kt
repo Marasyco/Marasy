@@ -8,7 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private const val USER_BASE_URL = "http://demo2.marasy.com.dedi8785.your-server.de/"
+//    private const val USER_BASE_URL = "http://demo2.marasy.com.dedi8785.your-server.de/" //  demo
+    private const val USER_BASE_URL = "https://marasy-jo.com/"   // live
 
     private fun getRetrofit(baseUrl: String): Retrofit {
 

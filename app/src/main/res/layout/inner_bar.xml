@@ -52,5 +52,20 @@
         app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/cartCountTv"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="-6dp"
+        android:layout_marginRight="-12dp"
+        android:background="@drawable/red_circle"
+        android:text="0"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintRight_toRightOf="@id/cartButton"
+        app:layout_constraintTop_toTopOf="@id/cartButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 class ShopperOrderProductsAdapter(
     var list: List<ShopperOrderItem>,
     var category: String,
+    private val flag: Int = 0,
     private val onAvailableClick: (ShopperOrderItem) -> Unit,
     private val onUnAvailableClick: (ShopperOrderItem) -> Unit
 ) : RecyclerView.Adapter<ShopperOrderProductsAdapter.ShopperProductViewHolder>() {
@@ -38,6 +39,7 @@ class ShopperOrderProductsAdapter(
             categoryName.text = category.toString()
             quantityTv.text = data.quantity.toString()
             priceTv.text = data.total_unit_price + " JD"
+            buttonsLinear.visibility = if (flag == 2) android.view.View.INVISIBLE else android.view.View.VISIBLE
             availableButton.setOnClickListener {
                 onAvailableClick(data)
             }

@@ -8,10 +8,15 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blueray.marasy.R
+import com.blueray.marasy.adapters.BestSellingAdapter
+import com.blueray.marasy.adapters.MyOrderDetailsItemsAdapter
 import com.blueray.marasy.databinding.ActivityOrderDetailsBinding
 import com.blueray.marasy.helpers.HelperUtils.showToast
 import com.blueray.marasy.helpers.ViewUtils.hide
+import com.blueray.marasy.interfaces.OnBestSellingClick
+import com.blueray.marasy.model.Item
 import com.blueray.marasy.model.NetworkResults
 import com.blueray.marasy.viewmodel.AppViewModel
 
@@ -20,6 +25,7 @@ class OrderDetailsActivity : BaseActivity() {
     private var orderId = ""
     private var orderNumber = ""
     private var fromCheckout = false
+    private lateinit var relatedProductsAdapter: MyOrderDetailsItemsAdapter
     private val viewmodel by viewModels<AppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,6 +203,20 @@ class OrderDetailsActivity : BaseActivity() {
                         }
 
 
+                        relatedProductsAdapter = MyOrderDetailsItemsAdapter(object : OnBestSellingClick {
+                            override fun onProductDetailsClick(id: String) {
+//                                val intent = Intent(
+//                                    this@OrderDetailsActivity,
+//                                    ProductDetailsActivity::class.java
+//                                )
+//                                intent.putExtra("pid", id)
+//                                startActivity(intent)
+                            }
+                        })
+                        relatedProductsAdapter.submitList(result.data.data.items as MutableList<Item>)
+                        binding.productsRv.adapter = relatedProductsAdapter
+                        binding.productsRv.layoutManager =
+                            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
                     }
                 }
 

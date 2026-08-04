@@ -230,7 +230,7 @@ data class CartItem(
 )
 
 data class GetMyAddressResponse(
-    val `data`: List<GetMyAddressData>,
+    val `data`: List<GetMyAddressData>?,
     val msg: Msg
 )
 
@@ -245,10 +245,10 @@ data class FullAddress(
     val address_line1: String,
     val country_code: String,
     val detailed_address: String,
-    val city_and_area_id: String,
-    val city_and_area: String,
-    val lat: Double,
-    val lon: Double,
+    val city_and_area_id: String?,
+    val city_and_area: String?,
+    val lat: Double?,
+    val lon: Double?,
 )
 
 data class ViewProfileResponse(
@@ -624,7 +624,8 @@ data class AddressDetailsFullAddress(
     val locality: String,
     val lon: Double,
     val city_and_area_id: String,
-    val city_and_area: String
+    val city_and_area: String,
+    val city_id: String?
 )
 
 data class GetOfferProductsResponse(

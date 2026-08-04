@@ -52,6 +52,7 @@
     <string name="update_cart">تحديث السلة</string>
     <string name="final_total">المجموع النهائي</string>
     <string name="cart">السلة</string>
+    <string name="cart_empty_message">سلة التسوق فارغة. يرجى إضافة منتجات قبل الدفع.</string>
     <string name="client_info">ملعومات العميل</string>
     <string name="add_new_address">ضيف عنوان جديد +</string>
     <string name="delivery_fees">التوصيل</string>
@@ -167,9 +168,15 @@
     <string name="invalid_expiry_date">تاريخ الانتهاء غير صحيح</string>
     <string name="invalid_cvv">رمز الأمان غير صحيح</string>
     <string name="payment_successful">تم الدفع بنجاح!</string>
+    <string name="payment_success_message">تم تأكيد طلبك بنجاح. شكراً لتسوقك معنا.</string>
     <string name="payment_failed">فشل الدفع. الرجاء المحاولة مرة أخرى.</string>
+    <string name="minimum_payment_amount">الحد الادنى للدفع هو 1 دينار</string>
+    <string name="payment_3ds_required">يتطلب البنك التحقق الآمن 3D Secure. يرجى استخدام صفحة الدفع الآمنة.</string>
     <string name="card_number_hint">أدخل رقم البطاقة</string>
     <string name="cardholder_name_hint">أدخل اسم حامل البطاقة</string>
     <string name="expiry_date_hint">شهر/سنة</string>
     <string name="cvv_hint">رمز الأمان</string>
+    <string name="something_wrong">حدث خطأ ما, جميع الحقول مطلوبة</string>
+    <string name="skip">تخطي</string>
+    <string name="shop_now">تسوق الان</string>
 </resources>

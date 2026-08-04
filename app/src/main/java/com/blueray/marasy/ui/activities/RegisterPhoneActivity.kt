@@ -35,6 +35,10 @@ class RegisterPhoneActivity : BaseActivity() {
                 viewmodel.retrieveCheckPhone(binding.phoneEt.text.toString(), "0")
             }
         }
+        binding.loginButton.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
 
         getCheckPhone()
     }

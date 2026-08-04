@@ -45,7 +45,6 @@
                 android:id="@+id/barcodeEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:maxLines="1"
                 android:fontFamily="@font/cairo_regular"
                 android:textSize="16sp"

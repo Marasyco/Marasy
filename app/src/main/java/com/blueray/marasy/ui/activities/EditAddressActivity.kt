@@ -6,18 +6,17 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.blueray.marasy.R
 import com.blueray.marasy.adapters.CustomSpinnerAdapter
 import com.blueray.marasy.databinding.ActivityEditAddressBinding
+import com.blueray.marasy.helpers.HelperUtils.showErrorToast
+import com.blueray.marasy.helpers.HelperUtils.showToast
 import com.blueray.marasy.model.NetworkResults
 import com.blueray.marasy.viewmodel.AppViewModel
 
 class EditAddressActivity : BaseActivity() {
+
     companion object {
         var EDIT_LAT: String? = null
         var EDIT_LONG: String? = null
@@ -28,16 +27,18 @@ class EditAddressActivity : BaseActivity() {
     private var profile_id = ""
     private val viewmodel by viewModels<AppViewModel>()
     private lateinit var binding: ActivityEditAddressBinding
+
+    private var selectedCityIdFromApi: String? = null
     private var selectedAreaIdFromApi: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditAddressBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.includedTab.title.text = getString(R.string.edit_address)
-        binding.includedTab.backButton.setOnClickListener {
-            finish()
-        }
+        binding.includedTab.backButton.setOnClickListener { finish() }
+
         profile_id = intent.getStringExtra("profile_id").toString()
         viewmodel.retrieveAddressDetails(profile_id)
 
@@ -57,7 +58,10 @@ class EditAddressActivity : BaseActivity() {
                 city_and_area = EDIT_AREA.toString()
             )
         }
+
         getAddressDetails()
+        getCities()
+        getAreas()
         getEditAddress()
     }
 
@@ -72,12 +76,14 @@ class EditAddressActivity : BaseActivity() {
                         EDIT_LAT = fullAddress.lat.toString()
                         EDIT_LONG = fullAddress.lon.toString()
                         EDIT_AREA_TEXT = fullAddress.address_line1
+                        EDIT_AREA = fullAddress.city_and_area_id
 
+                        selectedCityIdFromApi = fullAddress.city_id
                         selectedAreaIdFromApi = fullAddress.city_and_area_id
-                        Log.d("ADDRESS", "Selected area ID: $selectedAreaIdFromApi")
 
-                        viewmodel.retrieveAreas("1")
-                        getAreas()
+                        Log.d("EDIT_ADDRESS", "city_id=$selectedCityIdFromApi area_id=$selectedAreaIdFromApi")
+
+                        viewmodel.retrieveCities()
                     } else {
                         Toast.makeText(this, "Address details are empty", Toast.LENGTH_SHORT).show()
                     }
@@ -92,6 +98,49 @@ class EditAddressActivity : BaseActivity() {
         }
     }
 
+    private fun getCities() {
+        viewmodel.getCities().observe(this) { result ->
+            when (result) {
+                is NetworkResults.Success -> {
+                    val cities = result.data.data
+                    if (!cities.isNullOrEmpty()) {
+                        val customAdapter = CustomSpinnerAdapter(this, cities)
+                        binding.sectorCity.adapter = customAdapter
+
+                        binding.sectorCity.onItemSelectedListener =
+                            object : AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>,
+                                    view: View?,
+                                    position: Int,
+                                    id: Long
+                                ) {
+                                    val selectedCity = cities[position]
+                                    viewmodel.retrieveAreas(selectedCity.tid)
+                                }
+
+                                override fun onNothingSelected(parent: AdapterView<*>) {}
+                            }
+
+                        // Pre-select the city that matches the saved address
+                        val cityIndex = cities.indexOfFirst { it.tid == selectedCityIdFromApi }
+                        if (cityIndex >= 0) {
+                            binding.sectorCity.setSelection(cityIndex)
+                        } else {
+                            // Fallback: trigger first city to load its areas
+                            viewmodel.retrieveAreas(cities[0].tid)
+                        }
+                    } else {
+                        Toast.makeText(this, "No cities available", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                is NetworkResults.Error -> {}
+                else -> {}
+            }
+        }
+    }
+
     private fun getAreas() {
         viewmodel.getAreas().observe(this) { result ->
             when (result) {
@@ -99,17 +148,9 @@ class EditAddressActivity : BaseActivity() {
                     val areas = result.data.data
                     if (!areas.isNullOrEmpty()) {
                         val customAdapter = CustomSpinnerAdapter(this, areas)
-                        binding.areaSpinner.adapter = customAdapter
+                        binding.sectorArea.adapter = customAdapter
 
-                        // Match selected area ID
-                        val selectedIndex = areas.indexOfFirst { it.tid == selectedAreaIdFromApi }
-                        Log.d("AREAS", "Matched index: $selectedIndex")
-
-                        if (selectedIndex >= 0) {
-                            binding.areaSpinner.setSelection(selectedIndex)
-                        }
-
-                        binding.areaSpinner.onItemSelectedListener =
+                        binding.sectorArea.onItemSelectedListener =
                             object : AdapterView.OnItemSelectedListener {
                                 override fun onItemSelected(
                                     parent: AdapterView<*>?,
@@ -120,21 +161,24 @@ class EditAddressActivity : BaseActivity() {
                                     val selectedArea = areas[position]
                                     if (selectedArea.tid != "0") {
                                         EDIT_AREA = selectedArea.tid
-                                        Log.d("AREAS", "User selected area: ${selectedArea.name}")
+                                        Log.d("EDIT_ADDRESS", "Area selected: ${selectedArea.name}")
                                     }
                                 }
 
                                 override fun onNothingSelected(parent: AdapterView<*>?) {}
                             }
+
+                        // Pre-select the area that matches the saved address
+                        val areaIndex = areas.indexOfFirst { it.tid == selectedAreaIdFromApi }
+                        if (areaIndex >= 0) {
+                            binding.sectorArea.setSelection(areaIndex)
+                        }
                     } else {
                         Toast.makeText(this, "No areas found", Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                is NetworkResults.Error -> {
-                    Toast.makeText(this, "Failed to load areas", Toast.LENGTH_SHORT).show()
-                }
-
+                is NetworkResults.Error -> {}
                 else -> {}
             }
         }
@@ -144,26 +188,22 @@ class EditAddressActivity : BaseActivity() {
         viewmodel.getEditAddress().observe(this) { result ->
             when (result) {
                 is NetworkResults.Success -> {
-                    Toast.makeText(this, result.data.msg.message, Toast.LENGTH_SHORT).show()
+                    showToast(this, result.data.msg.message)
                     finish()
                 }
 
                 is NetworkResults.Error -> {
-                    Toast.makeText(
-                        this,
-                        result.exception.localizedMessage.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showErrorToast(this, result.exception.localizedMessage ?: result.exception.message ?: "Unknown error")
                 }
-                else ->{}
+
+                else -> {}
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("ADDREESSS", EDIT_LAT ?: "LAT null")
-        Log.d("ADDREESSS", EDIT_LONG ?: "LONG null")
+        Log.d("EDIT_ADDRESS", "LAT=${EDIT_LAT ?: "null"} LONG=${EDIT_LONG ?: "null"}")
         binding.addressEt.setText(EDIT_AREA_TEXT)
     }
 }

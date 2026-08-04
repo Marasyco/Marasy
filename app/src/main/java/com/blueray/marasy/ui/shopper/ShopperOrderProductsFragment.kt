@@ -17,6 +17,8 @@ import com.blueray.marasy.adapters.ShopperOrderProductsAdapter
 import com.blueray.marasy.databinding.FragmentShopperOrderProductsBinding
 import com.blueray.marasy.helpers.HelperUtils.showErrorToast
 import com.blueray.marasy.helpers.HelperUtils.showToast
+import com.blueray.marasy.helpers.ViewUtils.hide
+import com.blueray.marasy.helpers.ViewUtils.show
 import com.blueray.marasy.model.NetworkResults
 import com.blueray.marasy.viewmodel.AppViewModel
 import com.google.android.material.button.MaterialButton
@@ -163,6 +165,8 @@ class ShopperOrderProductsFragment : Fragment() {
         }
 
         binding.endOrderBtn.setOnClickListener {
+            binding.progress.show()
+            binding.endOrderBtn.hide()
             viewmodel.retrieveStartEndEmployeeOrder(
                 order_id = orderId.toString(),
                 type_flag = "1",
@@ -179,9 +183,11 @@ class ShopperOrderProductsFragment : Fragment() {
         viewmodel.getShopperOrderProducts().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is NetworkResults.Success -> {
+                    Log.d("****", "getOrderProducts: ${result.data.data.items}")
                     val adapter = ShopperOrderProductsAdapter(
                         list = result.data.data.items,
                         category = category.toString(),
+                        flag = flag,
                         onAvailableClick = { item ->
                             scannedItemTitle = item.title
                             scannedItemId = item.order_item_id
@@ -265,6 +271,8 @@ class ShopperOrderProductsFragment : Fragment() {
 
     private fun getStartEndEmployeeOrder() {
         viewmodel.getStartEndEmployeeOrder().observe(viewLifecycleOwner) { result ->
+            binding.endOrderBtn.show()
+            binding.progress.hide()
             when (result) {
                 is NetworkResults.Success -> {
                     if (result.data.msg.status == 200) {

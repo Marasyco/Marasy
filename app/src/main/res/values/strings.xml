@@ -57,6 +57,7 @@
     <string name="update_cart">Update cart</string>
     <string name="final_total">Final total</string>
     <string name="cart">Cart</string>
+    <string name="cart_empty_message">Your cart is empty. Please add items before checkout.</string>
     <string name="client_info">Client info</string>
     <string name="add_new_address">Add new address +</string>
     <string name="delivery_fees">Delivery fees</string>
@@ -167,9 +168,15 @@
     <string name="invalid_expiry_date">Invalid expiry date</string>
     <string name="invalid_cvv">Invalid CVV</string>
     <string name="payment_successful">Payment successful!</string>
+    <string name="payment_success_message">Your order has been placed successfully. Thank you for shopping with us.</string>
     <string name="payment_failed">Payment failed. Please try again.</string>
+    <string name="minimum_payment_amount">Minimum payment is 1 JOD</string>
+    <string name="payment_3ds_required">Your bank requires 3D Secure verification. Please use the secure payment page.</string>
     <string name="card_number_hint">Enter card number</string>
     <string name="cardholder_name_hint">Enter cardholder name</string>
     <string name="expiry_date_hint">MM/YY</string>
     <string name="cvv_hint">CVV</string>
+    <string name="something_wrong">Something went wrong, all fields are required</string>
+    <string name="skip">Skip</string>
+    <string name="shop_now">Shop now</string>
 </resources>

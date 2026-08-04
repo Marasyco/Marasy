@@ -42,15 +42,44 @@ class AllCategoriesFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        // Show cart icon and handle navigation
+        // Show cart icon with badge and handle navigation
         binding.includedTab.cartButton.visibility = View.VISIBLE
+        binding.includedTab.cartCountTv.visibility = View.VISIBLE
         binding.includedTab.cartButton.setOnClickListener {
             val intent = Intent(requireContext(), com.blueray.marasy.ui.activities.CartActivity::class.java)
             startActivity(intent)
         }
 
         viewmodel.retrieveMainCategories()
+        viewmodel.retrieveCart()
         getCategories()
+        getCart()
+    }
+
+    private fun getCart() {
+        viewmodel.getViewCart().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is NetworkResults.Success -> {
+                    if (result.data.msg.status == 200) {
+                        binding.includedTab.cartCountTv.text =
+                            result.data.data.items.count().toString()
+                    } else {
+                        binding.includedTab.cartCountTv.text = "0"
+                    }
+                }
+                is NetworkResults.Error -> {
+                    binding.includedTab.cartCountTv.text = "0"
+                }
+                else -> {
+                    binding.includedTab.cartCountTv.text = "0"
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewmodel.retrieveCart()
     }
 
     private fun getCategories() {

@@ -35,9 +35,4 @@
         android:name="com.blueray.marasy.ui.fragments.AllTrademarksFragment"
         android:label="fragment_all_trademarks"
         tools:layout="@layout/fragment_all_trademarks" />
-    <fragment
-        android:id="@+id/contactUsActivity"
-        android:name="com.blueray.marasy.ui.activities.ContactUsActivity"
-        android:label="activity_contact_us"
-        tools:layout="@layout/activity_contact_us" />
 </navigation>

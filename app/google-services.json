@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "489381083034",
+    "project_id": "marasy-5ee5c",
+    "storage_bucket": "marasy-5ee5c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489381083034:android:dbef3cffbbc6224c2a2c23",
+        "android_client_info": {
+          "package_name": "com.blueray.marasy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2WRqrC7DRa0i12uapbasV7VSNZyT8k0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

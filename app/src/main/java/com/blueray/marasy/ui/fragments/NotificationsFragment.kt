@@ -50,50 +50,53 @@ class NotificationsFragment : Fragment() {
             return
         }
         
-        viewmodel.retrieveMyNotifications()
+        binding.notificationsRv.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
+        binding.swipeRefresh.setColorSchemeResources(R.color.orange)
+        binding.swipeRefresh.setOnRefreshListener {
+            viewmodel.retrieveMyNotifications()
+        }
+
+        viewmodel.retrieveMyNotifications()
         getNotifications()
     }
+
     private fun getNotifications() {
         viewmodel.getMyNotifications().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is NetworkResults.Success -> {
-                    adapter =
-                        NotificationsAdapter(object : NotificationListener {
-                            override fun onNotificationClick(id: String, type: String) {
-                                if (type == "product") {
-                                    val intent =
-                                        Intent(requireContext(), ProductDetailsActivity::class.java)
-                                    intent.putExtra("pid", id)
-                                    startActivity(intent)
-                                } else if (type == "category") {
-//                                    val intent =
-//                                        Intent(requireContext(), ProductsActivity::class.java)
-//                                    intent.putExtra("categoryId", id)
-//                                    startActivity(intent)
-                                } else if (type == "brand") {
-//                                    val bundle = Bundle().apply {
-//                                        putString("id", id)
-//                                    }
-////                                    findNavController().navigate(R.id.brandProductsFragment, bundle)
-
-                                }
+                    binding.swipeRefresh.isRefreshing = false
+                    adapter = NotificationsAdapter(object : NotificationListener {
+                        override fun onNotificationClick(id: String, type: String) {
+                            if (type == "product") {
+                                val intent =
+                                    Intent(requireContext(), ProductDetailsActivity::class.java)
+                                intent.putExtra("pid", id)
+                                startActivity(intent)
+                            } else if (type == "category") {
+//                                val intent =
+//                                    Intent(requireContext(), ProductsActivity::class.java)
+//                                intent.putExtra("categoryId", id)
+//                                startActivity(intent)
+                            } else if (type == "brand") {
+//                                val bundle = Bundle().apply {
+//                                    putString("id", id)
+//                                }
+//                                findNavController().navigate(R.id.brandProductsFragment, bundle)
                             }
-
-                        })
+                        }
+                    })
                     adapter.submitList(result.data.data_1)
                     binding.notificationsRv.adapter = adapter
-                    binding.notificationsRv.layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 }
 
                 is NetworkResults.Error -> {
+                    binding.swipeRefresh.isRefreshing = false
                     showErrorToast(requireContext(), result.exception.localizedMessage.toString())
                 }
 
-                else -> {
-
-                }
+                else -> {}
             }
         }
     }

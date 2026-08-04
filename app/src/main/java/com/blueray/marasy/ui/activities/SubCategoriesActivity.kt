@@ -33,16 +33,45 @@ class SubCategoriesActivity : BaseActivity() {
         binding.includedTab.title.text = categoryName
         binding.includedTab.backButton.show()
 
-        // Show cart icon and handle navigation
+        // Show cart icon with badge and handle navigation
         binding.includedTab.cartButton.visibility = android.view.View.VISIBLE
+        binding.includedTab.cartCountTv.visibility = android.view.View.VISIBLE
         binding.includedTab.cartButton.setOnClickListener {
             val intent = Intent(this, CartActivity::class.java)
             startActivity(intent)
         }
 
         viewmodel.retrieveSubCategories(categoryId)
+        viewmodel.retrieveCart()
         getSubCategories()
+        getCart()
 
+    }
+
+    private fun getCart() {
+        viewmodel.getViewCart().observe(this) { result ->
+            when (result) {
+                is NetworkResults.Success -> {
+                    if (result.data.msg.status == 200) {
+                        binding.includedTab.cartCountTv.text =
+                            result.data.data.items.count().toString()
+                    } else {
+                        binding.includedTab.cartCountTv.text = "0"
+                    }
+                }
+                is NetworkResults.Error -> {
+                    binding.includedTab.cartCountTv.text = "0"
+                }
+                else -> {
+                    binding.includedTab.cartCountTv.text = "0"
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewmodel.retrieveCart()
     }
 
     private fun getSubCategories() {

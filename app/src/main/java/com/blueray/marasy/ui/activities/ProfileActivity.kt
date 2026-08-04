@@ -53,7 +53,7 @@ class ProfileActivity : BaseActivity() {
                         Log.d("PORFFFSX", result.data.toString())
 
 
-//                        binding.establishmentNameLabel.text = result.data.data.personal?.company_owner_name.toString()
+                        binding.establishmentNameLabel.text = result.data.data.personal?.mail.toString()
                         binding.name.text = result.data.data.personal?.full_name.toString()
                         binding.phoneNumberTV.text = result.data.data.personal?.phone.toString()
 

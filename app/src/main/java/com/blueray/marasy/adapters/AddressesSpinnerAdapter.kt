@@ -19,7 +19,7 @@ class AddressesSpinnerAdapter(
             .inflate(R.layout.spinner_custom_item, parent, false)
         val city = list[position]
         val nameTv = view.findViewById<TextView>(R.id.nameTv)
-        nameTv.text = city.FullAddress.locality + "," + city.FullAddress.detailed_address
+        nameTv.text = city.FullAddress.locality + "," + city.FullAddress.address_line1
         return view
     }
 
@@ -28,7 +28,7 @@ class AddressesSpinnerAdapter(
             .inflate(R.layout.spinner_custom_item, parent, false)
         val city = list[position]
         val nameTv = view.findViewById<TextView>(R.id.nameTv)
-        nameTv.text = city.FullAddress.locality + "," + city.FullAddress.detailed_address
+        nameTv.text = city.FullAddress.locality + "," + city.FullAddress.address_line1
         return view
     }
 }

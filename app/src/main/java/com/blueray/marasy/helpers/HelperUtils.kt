@@ -3,7 +3,6 @@ package com.blueray.marasy.helpers
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.widget.Button
 import android.widget.TextView
@@ -21,7 +20,7 @@ object HelperUtils {
     const val BASE_URL = "http://demo2.marasy.com.dedi8785.your-server.de"
 
     fun String.toStringRequestBody(): RequestBody {
-        return toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        return toRequestBody("text/plain".toMediaTypeOrNull())
     }
 
     fun showToast(context: Context, message: String) {
@@ -123,29 +122,42 @@ object HelperUtils {
         dialog.show()
     }
 
-    fun setDefaultLanguage(context: Context, lang: String?) {
-        val locale = Locale(lang)
-        Locale.setDefault(locale)
-        val config = Configuration()
+    fun showPaymentSuccessDialog(
+        activity: Activity,
+        message: String,
+        onDismiss: (() -> Unit)? = null
+    ) {
+        val dialogView = activity.layoutInflater.inflate(R.layout.dialog_payment_success, null)
+        val dialog = android.app.AlertDialog.Builder(activity)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
 
-        config. locale = locale
-        context.resources.updateConfiguration(
-            config,
-            context.resources.displayMetrics
-        )
+        dialogView.findViewById<TextView>(R.id.tvSuccessMessage).text = message
+        dialogView.findViewById<Button>(R.id.btnSuccessDone).setOnClickListener {
+            dialog.dismiss()
+            onDismiss?.invoke()
+        }
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
     }
 
+    /**
+     * Persists language synchronously so [BaseActivity.attachBaseContext] sees the new value
+     * when activities are recreated after a locale change.
+     */
     fun setLang(mContext: Context?, lang: String?) {
-        val sharedPreferences = mContext?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPreferences?.edit()
-        editor?.putString("lang", lang)
-        editor?.apply()
+        mContext?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+            ?.edit()
+            ?.putString("lang", lang)
+            ?.commit()
     }
 
     /**
      * Opens Google Maps with the given coordinates.
      * Validates coordinates and handles coordinate swapping if needed.
-     * 
+     *
      * @param context The context to use for opening maps
      * @param latitude The latitude coordinate
      * @param longitude The longitude coordinate
@@ -185,6 +197,15 @@ object HelperUtils {
             } catch (e: Exception) {
                 showErrorToast(context, "Unable to open maps")
             }
+        }
+    }
+
+    fun logout(mContext: Context?) {
+        val sharedPreferences = mContext?.getSharedPreferences(HelperUtils.SHARED_PREF, Context.MODE_PRIVATE)
+        sharedPreferences?.edit()?.apply {
+            putString("uid", "0")
+            putString("role", "0")
+            apply()
         }
     }
 }

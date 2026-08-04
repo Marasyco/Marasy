@@ -42,11 +42,15 @@ class MyLocationsActivity : BaseActivity() {
         viewmodel.getMyAddresses().observe(this) { result ->
             when (result) {
                 is NetworkResults.Success -> {
-                    adapter = MyLocationsAdapter(result.data.data, object : AddressItemListener {
+                    val addresses = result.data.data
+                    if (addresses.isNullOrEmpty()) {
+                        Toast.makeText(this, result.data.msg.message, Toast.LENGTH_SHORT).show()
+                        binding.locationsRv.adapter = null
+                        return@observe
+                    }
+                    adapter = MyLocationsAdapter(addresses, object : AddressItemListener {
                         override fun onDefaultClick(id: String) {
-                            viewmodel.retrieveSetDefaultAddress(
-                                id
-                            )
+                            viewmodel.retrieveSetDefaultAddress(id)
                         }
 
                         override fun onOptionsClick(id: String) {
@@ -57,9 +61,7 @@ class MyLocationsActivity : BaseActivity() {
                         }
 
                         override fun onDeleteClick(id: String) {
-                            viewmodel.retrieveDeleteAddress(
-                                id
-                            )
+                            viewmodel.retrieveDeleteAddress(id)
                         }
                     })
                     binding.locationsRv.adapter = adapter
@@ -70,14 +72,12 @@ class MyLocationsActivity : BaseActivity() {
                 is NetworkResults.Error -> {
                     Toast.makeText(
                         this,
-                        result.exception.localizedMessage.toString(),
+                        result.exception.localizedMessage ?: result.exception.message ?: "Error",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
 
-                else -> {
-
-                }
+                else -> {}
             }
         }
     }
@@ -93,16 +93,13 @@ class MyLocationsActivity : BaseActivity() {
                 is NetworkResults.Error -> {
                     Toast.makeText(
                         this,
-                        result.exception.localizedMessage.toString(),
+                        result.exception.localizedMessage ?: result.exception.message ?: "Error",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
 
-                else -> {
-
-                }
+                else -> {}
             }
-
         }
     }
 
@@ -117,7 +114,7 @@ class MyLocationsActivity : BaseActivity() {
                 is NetworkResults.Error -> {
                     Toast.makeText(
                         this,
-                        result.exception.localizedMessage.toString(),
+                        result.exception.localizedMessage ?: result.exception.message ?: "Error",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

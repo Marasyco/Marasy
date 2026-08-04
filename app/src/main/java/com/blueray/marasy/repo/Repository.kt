@@ -46,15 +46,19 @@ object Repository {
 
     suspend fun loginUser(
         phone: String,
-        lang: String
+        lang: String,
+        deviceId: String = ""
     ): NetworkResults<MessageResponse> {
 
+        Log.d("****LoginUser", "device_id: $deviceId")
         val phoneBody = phone.toStringRequestBody()
         val langBody = lang.toStringRequestBody()
+        val playerIdBody = deviceId.toStringRequestBody()
         try {
             val results = ApiClient.retrofitService.loginUser(
                 phoneBody,
-                langBody
+                langBody,
+                playerIdBody
             )
             return if (results.isSuccessful) {
                 NetworkResults.Success(results.body()!!)
@@ -115,10 +119,11 @@ object Repository {
         }
     }
 
-    suspend fun homeSlider(): NetworkResults<HomeSliderResponse> {
+    suspend fun homeSlider(lang: String): NetworkResults<HomeSliderResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val results = ApiClient.retrofitService.homeSlider()
+                val results = ApiClient.retrofitService.homeSlider(langBody)
                 NetworkResults.Success(results)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -126,10 +131,11 @@ object Repository {
         }
     }
 
-    suspend fun getCategories(): NetworkResults<CategoriesResponse> {
+    suspend fun getCategories(lang: String): NetworkResults<CategoriesResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val results = ApiClient.retrofitService.getCategories()
+                val results = ApiClient.retrofitService.getCategories(langBody)
                 NetworkResults.Success(results)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -137,10 +143,11 @@ object Repository {
         }
     }
 
-    suspend fun getTrademarks(): NetworkResults<TrademarksResponse> {
+    suspend fun getTrademarks(lang: String): NetworkResults<TrademarksResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val results = ApiClient.retrofitService.getTrademarks()
+                val results = ApiClient.retrofitService.getTrademarks(langBody)
                 NetworkResults.Success(results)
             } catch (e: Exception) {
                 Log.d("TRADEMARKS" , e.toString())
@@ -151,15 +158,18 @@ object Repository {
 
     suspend fun getSubCategories(
         uid: String,
-        parentId: String
+        parentId: String,
+        lang: String
     ): NetworkResults<GetSubCategoriesResponse> {
         val parentIdBody = parentId.toStringRequestBody()
         val uidBody = uid.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
                 val result = ApiClient.retrofitService.getSubCategories(
                     uidBody,
-                    parentIdBody
+                    parentIdBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -170,17 +180,21 @@ object Repository {
 
     suspend fun getProductDetails(
         uid: String,
-        pid: String
+        pid: String,
+        lang: String
     ): NetworkResults<ProductDetailsResponse> {
         val pidBody = pid.toStringRequestBody()
         val uidBody = uid.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
 
         return withContext(Dispatchers.IO) {
             try {
                 val result = ApiClient.retrofitService.getProductDetails(
                     uidBody,
-                    pidBody
+                    pidBody,
+                    langBody
                 )
+                Log.d("****ProductDetails", result.toString())
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -192,19 +206,22 @@ object Repository {
         uid: String,
         category: String,
         subCategory: String,
-        page: String
+        page: String,
+        lang: String
     ): NetworkResults<GetProductsResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
             val categoryBody = category.toStringRequestBody()
             val subCategoryBody = subCategory.toStringRequestBody()
             val pageBody = page.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
                 val result = ApiClient.retrofitService.getCategoryProducts(
                     uidBody,
                     categoryBody,
                     subCategoryBody,
-                    pageBody
+                    pageBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -216,17 +233,20 @@ object Repository {
     suspend fun getTrademarkProducts(
         uid: String,
         trademarkId: String,
-        page: String
+        page: String,
+        lang: String
     ): NetworkResults<GetProductsResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
             val trademarkBody = trademarkId.toStringRequestBody()
             val pageBody = page.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
                 val result = ApiClient.retrofitService.getTrademarkProducts(
                     uidBody,
                     trademarkBody,
-                    pageBody
+                    pageBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -290,12 +310,14 @@ object Repository {
         }
     }
 
-    suspend fun getFavoriteProducts(uid: String): NetworkResults<GetFavoriteProductsResponse> {
+    suspend fun getFavoriteProducts(uid: String, lang: String): NetworkResults<GetFavoriteProductsResponse> {
         val uidBody = uid.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
                 val result = ApiClient.retrofitService.getFavoriteProducts(
-                    uidBody
+                    uidBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -304,11 +326,12 @@ object Repository {
         }
     }
 
-    suspend fun getMyNotifications(uid: String): NetworkResults<GetNotificationResponse> {
+    suspend fun getMyNotifications(uid: String, lang: String): NetworkResults<GetNotificationResponse> {
         val uidBody = uid.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val result = ApiClient.retrofitService.getMyNotifications(uidBody)
+                val result = ApiClient.retrofitService.getMyNotifications(uidBody, langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -317,13 +340,17 @@ object Repository {
     }
 
     suspend fun viewCart(
-        uid: String
+        uid: String,
+        lang: String
     ): NetworkResults<ViewCartResponse> {
         val uidBody = uid.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
 
+        Log.d("****UID", uid)
         return withContext(Dispatchers.IO) {
             try {
-                val result = ApiClient.retrofitService.viewCart(uidBody)
+                val result = ApiClient.retrofitService.viewCart(uidBody, langBody)
+                Log.d("****viewCart", result.toString())
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -383,26 +410,37 @@ object Repository {
 
 
     suspend fun getMyAddresses(
-        uid: String
+        uid: String,
+        lang: String
     ): NetworkResults<GetMyAddressResponse> {
         val uidBody = uid.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
+            Log.d("****getMyAddresses", "uid=$uid lang=$lang")
             try {
-                val result = ApiClient.retrofitService.getMyAddresses(uidBody)
+                val result = ApiClient.retrofitService.getMyAddresses(uidBody, langBody)
+                Log.d("****getMyAddresses", result.toString())
                 NetworkResults.Success(result)
+            } catch (e: retrofit2.HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                Log.e("****getMyAddresses", "HTTP ${e.code()} - errorBody: $errorBody")
+                NetworkResults.Error(e)
             } catch (e: Exception) {
+                Log.e("****getMyAddresses", "Exception: ${e.javaClass.simpleName} - ${e.message}")
                 NetworkResults.Error(e)
             }
         }
     }
 
     suspend fun viewProfile(
-        uid: String
+        uid: String,
+        lang: String
     ): NetworkResults<ViewProfileResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
-                val result = ApiClient.retrofitService.viewProfile(uidBody)
+                val result = ApiClient.retrofitService.viewProfile(uidBody, langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -414,33 +452,51 @@ object Repository {
         uid: String,
         order_id: String,
         payment_method: String,
+        note: String,
         lang: String
     ): NetworkResults<MessageResponse> {
         val uidBody = uid.toStringRequestBody()
         val orderIdBody = order_id.toStringRequestBody()
         val paymentMethodBody = payment_method.toStringRequestBody()
+        val noteBody = note.toStringRequestBody()
 
         val langBody = lang.toStringRequestBody()
+        com.blueray.marasy.helpers.PaymentLogger.d(
+            "BackendCheckout",
+            "Request -> uid=$uid, orderId=$order_id, paymentMethod=$payment_method, note=$note, lang=$lang"
+        )
         try {
             val result = ApiClient.retrofitService.checkout(
                 uidBody,
                 orderIdBody,
                 paymentMethodBody,
+                noteBody,
                 langBody
             )
             return if (result.isSuccessful) {
-                NetworkResults.Success(result.body()!!)
+                val body = result.body()!!
+                com.blueray.marasy.helpers.PaymentLogger.d(
+                    "BackendCheckout",
+                    "Success response -> http=${result.code()}, status=${body.msg.status}, message=${body.msg.message}"
+                )
+                NetworkResults.Success(body)
             } else {
                 val errorBody = result.errorBody()?.string()
-                errorBody?.let {
-                    e("Repository Error Message", it)
+                com.blueray.marasy.helpers.PaymentLogger.logGatewayResponse(
+                    "BackendCheckout",
+                    result.code(),
+                    errorBody
+                )
+                return errorBody?.let {
                     try {
-                        // Convert the error response JSON to a common Error Model
                         val apiResponse: MessageResponse =
                             Gson().fromJson(it, MessageResponse::class.java)
+                        com.blueray.marasy.helpers.PaymentLogger.d(
+                            "BackendCheckout",
+                            "Parsed error -> status=${apiResponse.msg.status}, message=${apiResponse.msg.message}"
+                        )
                         NetworkResults.ErrorMessage(apiResponse)
                     } catch (e: JsonSyntaxException) {
-                        // Handle the case where the error response is not a valid JSON
                         NetworkResults.Error(e)
                     }
                 } ?: NetworkResults.Error(Exception("Error body is null"))
@@ -455,12 +511,14 @@ object Repository {
         uid: String,
         search_text: String,
         page: String,
-        search_flag: String
+        search_flag: String,
+        lang: String
     ): NetworkResults<GetProductsResponse> {
         val uidBody = uid.toStringRequestBody()
         val searchTextBody = search_text.toStringRequestBody()
         val pageBody = page.toStringRequestBody()
         val searchFlagBody = search_flag.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
                 val result =
@@ -468,7 +526,8 @@ object Repository {
                         uidBody,
                         searchTextBody,
                         pageBody,
-                        searchFlagBody
+                        searchFlagBody,
+                        langBody
                     )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -497,10 +556,11 @@ object Repository {
         }
     }
 
-    suspend fun getSectors(): NetworkResults<GetSectorsResponse> {
+    suspend fun getSectors(lang: String): NetworkResults<GetSectorsResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val result = ApiClient.retrofitService.getSectors()
+                val result = ApiClient.retrofitService.getSectors(langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -508,11 +568,12 @@ object Repository {
         }
     }
 
-    suspend fun getSubSectors(parent_tid: String): NetworkResults<GetSectorsResponse> {
+    suspend fun getSubSectors(parent_tid: String, lang: String): NetworkResults<GetSectorsResponse> {
         return withContext(Dispatchers.IO) {
             val parentTidBody = parent_tid.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
-                val result = ApiClient.retrofitService.getSubSectors(parentTidBody)
+                val result = ApiClient.retrofitService.getSubSectors(parentTidBody, langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -520,11 +581,12 @@ object Repository {
         }
     }
 
-    suspend fun getAreas(parent_tid: String): NetworkResults<GetCitiesResponse> {
+    suspend fun getAreas(parent_tid: String, lang: String): NetworkResults<GetCitiesResponse> {
         return withContext(Dispatchers.IO) {
             val parent_tidBody = parent_tid.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
-                val result = ApiClient.retrofitService.getAreas(parent_tidBody)
+                val result = ApiClient.retrofitService.getAreas(parent_tidBody, langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -532,10 +594,11 @@ object Repository {
         }
     }
 
-    suspend fun getCities(): NetworkResults<GetCitiesResponse> {
+    suspend fun getCities(lang: String): NetworkResults<GetCitiesResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val result = ApiClient.retrofitService.getCities()
+                val result = ApiClient.retrofitService.getCities(langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -557,6 +620,7 @@ object Repository {
         email: String,
         address_line1: String
     ): NetworkResults<LoginUserResponse> {
+        Log.d("****AddUser", "device_id: $playerId")
         val phoneBody = phone.toStringRequestBody()
         val langBody = lang.toStringRequestBody()
         val fullNameBody = full_name.toStringRequestBody()
@@ -629,17 +693,20 @@ object Repository {
     suspend fun setDefaultAddress(
         uid: String,
         profile_id: String,
-        as_default: String
+        as_default: String,
+        lang: String
     ): NetworkResults<MessageResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
             val profileIdBody = profile_id.toStringRequestBody()
             val asDefaultBody = as_default.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
                 val result = ApiClient.retrofitService.setDefaultAddress(
                     uidBody,
                     profileIdBody,
-                    asDefaultBody
+                    asDefaultBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -650,15 +717,18 @@ object Repository {
 
     suspend fun deleteAddress(
         uid: String,
-        profile_id: String
+        profile_id: String,
+        lang: String
     ): NetworkResults<MessageResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
             val profileIdBody = profile_id.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
                 val result = ApiClient.retrofitService.deleteAddress(
                     uidBody,
-                    profileIdBody
+                    profileIdBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -674,6 +744,7 @@ object Repository {
         lat: String,
         lon: String,
         city_and_area: String,
+        lang: String
     ): NetworkResults<MessageResponse> {
         val uidBody = uid.toStringRequestBody()
         val addressLineBody = address_line1.toStringRequestBody()
@@ -681,6 +752,7 @@ object Repository {
         val latBody = lat.toStringRequestBody()
         val lonBody = lon.toStringRequestBody()
         val cityAndAreaBody = city_and_area.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
 
         return withContext(Dispatchers.IO) {
             try {
@@ -691,30 +763,23 @@ object Repository {
                     lat = latBody,
                     lon = lonBody,
                     city_and_area = cityAndAreaBody,
+                    lang = langBody,
                 )
+                Log.d("****AddAddress", result.toString())
                 NetworkResults.Success(result)
             } catch (e: Exception) {
+                Log.d("****AddAddress", e.toString())
                 NetworkResults.Error(e)
             }
 
         }
     }
 
-    suspend fun aboutUs(): NetworkResults<AboutUsResponse> {
+    suspend fun aboutUs(lang: String): NetworkResults<AboutUsResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val result = ApiClient.retrofitService.aboutUs()
-                NetworkResults.Success(result)
-            } catch (e: Exception) {
-                NetworkResults.Error(e)
-            }
-        }
-    }
-
-    suspend fun privacyPolicy(): NetworkResults<PrivacyPolicyResponse> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val result = ApiClient.retrofitService.privacyPolicy()
+                val result = ApiClient.retrofitService.aboutUs(langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -722,10 +787,23 @@ object Repository {
         }
     }
 
-    suspend fun termsAndConditions(): NetworkResults<PrivacyPolicyResponse> {
+    suspend fun privacyPolicy(lang: String): NetworkResults<PrivacyPolicyResponse> {
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
-                val result = ApiClient.retrofitService.termsAndConditions()
+                val result = ApiClient.retrofitService.privacyPolicy(langBody)
+                NetworkResults.Success(result)
+            } catch (e: Exception) {
+                NetworkResults.Error(e)
+            }
+        }
+    }
+
+    suspend fun termsAndConditions(lang: String): NetworkResults<PrivacyPolicyResponse> {
+        val langBody = lang.toStringRequestBody()
+        return withContext(Dispatchers.IO) {
+            try {
+                val result = ApiClient.retrofitService.termsAndConditions(langBody)
                 NetworkResults.Success(result)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
@@ -938,13 +1016,16 @@ object Repository {
     }
 
     suspend fun getAddressDetails(
-        profile_id: String
+        profile_id: String,
+        lang: String
     ): NetworkResults<GetAddressDetailsResponse> {
         return withContext(Dispatchers.IO) {
             val profileIdBody = profile_id.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
                 val result = ApiClient.retrofitService.getAddressDetails(
-                    profileIdBody
+                    profileIdBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -961,6 +1042,7 @@ object Repository {
         detailed_address: String,
         lat: String,
         lon: String,
+        lang: String
     ): NetworkResults<MessageResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
@@ -970,6 +1052,7 @@ object Repository {
             val detailedAddressBody = detailed_address.toStringRequestBody()
             val latBody = lat.toStringRequestBody()
             val lonBody = lon.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
             try {
                 val result = ApiClient.retrofitService.editAddress(
                     uidBody,
@@ -978,7 +1061,8 @@ object Repository {
                     addressLine1Body,
                     detailedAddressBody,
                     latBody,
-                    lonBody
+                    lonBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -991,17 +1075,20 @@ object Repository {
         uid: String,
         full_name: String,
         email: String,
+        lang: String
     ): NetworkResults<MessageResponse> {
         return withContext(Dispatchers.IO) {
             val uidBody = uid.toStringRequestBody()
             val fullNameBody = full_name.toStringRequestBody()
             val emailBody = email.toStringRequestBody()
+            val langBody = lang.toStringRequestBody()
 
             try {
                 val result = ApiClient.retrofitService.updateUser(
                     uidBody,
                     fullNameBody,
                     emailBody,
+                    langBody,
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -1028,15 +1115,18 @@ object Repository {
 
     suspend fun viewOrderDetails(
         uid: String,
-        order_id: String
+        order_id: String,
+        lang: String
     ): NetworkResults<ViewOrderDetailsResponse> {
         val uidBody = uid.toStringRequestBody()
         val orderIdBody = order_id.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
         return withContext(Dispatchers.IO) {
             try {
                 val result = ApiClient.retrofitService.viewOrderDetails(
                     uidBody,
-                    orderIdBody
+                    orderIdBody,
+                    langBody
                 )
                 NetworkResults.Success(result)
             } catch (e: Exception) {
@@ -1047,20 +1137,59 @@ object Repository {
 
     suspend fun reOrder(
         uid: String,
-        order_id: String
+        order_id: String,
+        lang: String
     ): NetworkResults<ReOrderResponse> {
         val uidBody = uid.toStringRequestBody()
         val orderIdBody = order_id.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
 
         return withContext(Dispatchers.IO) {
             try {
                 val results = ApiClient.retrofitService.reOrder(
-                    uidBody, orderIdBody
+                    uidBody, orderIdBody, langBody
                 )
                 NetworkResults.Success(results)
             } catch (e: Exception) {
                 NetworkResults.Error(e)
             }
+        }
+    }
+
+    suspend fun contactUs(
+        phone: String,
+        notes: String,
+        fullName: String,
+        lang: String
+    ): NetworkResults<MessageResponse> {
+        val phoneBody = phone.toStringRequestBody()
+        val notesBody = notes.toStringRequestBody()
+        val fullNameBody = fullName.toStringRequestBody()
+        val langBody = lang.toStringRequestBody()
+        try {
+            val results = ApiClient.retrofitService.contactUs(
+                phoneBody,
+                notesBody,
+                fullNameBody,
+                langBody
+            )
+            return if (results.isSuccessful) {
+                NetworkResults.Success(results.body()!!)
+            } else {
+                val errorBody = results.errorBody()?.string()
+                errorBody?.let {
+                    e("Repository Error Message", it)
+                    try {
+                        val apiResponse: MessageResponse =
+                            Gson().fromJson(it, MessageResponse::class.java)
+                        NetworkResults.ErrorMessage(apiResponse)
+                    } catch (e: JsonSyntaxException) {
+                        NetworkResults.Error(e)
+                    }
+                } ?: NetworkResults.Error(Exception("Error body is null"))
+            }
+        } catch (e: Exception) {
+            return NetworkResults.Error(e)
         }
     }
 }

@@ -11,8 +11,8 @@ android {
         applicationId = "com.blueray.marasy"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -98,6 +98,9 @@ dependencies {
     implementation(libs.play.services.location)
 
     implementation("com.airbnb.android:lottie:5.2.0")
-
+    implementation("ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.5")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    // OneSignal Push Notifications
+    implementation("com.onesignal:OneSignal:[4.0.0, 4.99.99]")
 }

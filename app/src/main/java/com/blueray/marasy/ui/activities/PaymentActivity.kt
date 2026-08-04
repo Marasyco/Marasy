@@ -7,8 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import com.blueray.marasy.R
 import com.blueray.marasy.adapters.AddressesSpinnerAdapter
 import com.blueray.marasy.databinding.ActivityPaymentBinding
+import com.blueray.marasy.helpers.PaymentLogger
 import com.blueray.marasy.model.NetworkResults
 import com.blueray.marasy.services.MastercardPaymentService
 import com.blueray.marasy.viewmodel.AppViewModel
@@ -23,7 +25,10 @@ class PaymentActivity : BaseActivity() {
     private var orderId = ""
     private var totalPrice = ""
     private var deliveryFees = ""
+    private var deliveryTime = ""
     private var progressDialog: ProgressDialog? = null
+    private var isCompletingOnlineCheckout = false
+    private var isCheckoutPending = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +39,17 @@ class PaymentActivity : BaseActivity() {
         orderId = intent.getStringExtra("orderId").toString()
         totalPrice = intent.getStringExtra("totalPrice").toString()
         deliveryFees = intent.getStringExtra("deliveryFees").toString()
-        
+        deliveryTime = intent.getStringExtra("deliveryTime").toString()
+
         binding.totalItemsPrice.text = totalPrice
         binding.deliveryFeesTv.text = deliveryFees
+        binding.deliveryTimeTv.text = deliveryTime
+
+        PaymentLogger.d(
+            "PaymentScreen",
+            "Opened -> orderId=$orderId, totalPrice=$totalPrice, deliveryFees=$deliveryFees, " +
+                "parsedAmount=${MastercardPaymentService.parseAmount(totalPrice)}"
+        )
         
         binding.includedTab.backButton.setOnClickListener {
             finish()
@@ -54,7 +67,7 @@ class PaymentActivity : BaseActivity() {
         }
         
         binding.CashOnDeliveryButton.setOnClickListener {
-            viewmodel.retrieveCheckout(orderId, "1")
+            startBackendCheckout("1")
         }
         
         binding.onlinePaymentButton.setOnClickListener {
@@ -64,42 +77,95 @@ class PaymentActivity : BaseActivity() {
         viewmodel.retrieveMyAddresses()
         viewmodel.retrieveViewProfile()
         
+        viewmodel.clearCheckoutResult()
         getMyAddresses()
         getProfile()
         getCheckout()
     }
+
+    private fun startBackendCheckout(paymentMethod: String, checkoutOrderId: String = orderId) {
+        isCheckoutPending = true
+        isCompletingOnlineCheckout = paymentMethod == "2"
+        showProgressDialog(getString(R.string.processing_payment))
+        viewmodel.retrieveCheckout(checkoutOrderId, paymentMethod, binding.noteEt.text.toString())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewmodel.retrieveMyAddresses()
+    }
     
     private fun initiateOnlinePayment() {
-        showProgressDialog("Processing payment...")
+        val parsedAmount = MastercardPaymentService.parseAmount(totalPrice)
+        val gatewayAmount = MastercardPaymentService.extractAmount(totalPrice)
+        Log.d(
+            TAG,
+            "Initiating online payment -> orderId=$orderId, totalPrice=$totalPrice, " +
+                "parsedAmount=$parsedAmount, gatewayAmount=$gatewayAmount"
+        )
+        PaymentLogger.d(
+            "PaymentScreen",
+            "Initiating online payment -> orderId=$orderId, totalPrice=$totalPrice, " +
+                "parsedAmount=$parsedAmount, gatewayAmount=$gatewayAmount"
+        )
+
+        if (parsedAmount == null) {
+            Log.e(TAG, "Invalid payment amount: totalPrice=$totalPrice")
+            Toast.makeText(this, getString(R.string.payment_failed), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (parsedAmount < MastercardPaymentService.MIN_ONLINE_PAYMENT_JOD) {
+            Log.w(
+                TAG,
+                "Online payment blocked: amount $parsedAmount JOD is below minimum " +
+                    "${MastercardPaymentService.MIN_ONLINE_PAYMENT_JOD} JOD"
+            )
+            Toast.makeText(this, getString(R.string.minimum_payment_amount), Toast.LENGTH_LONG).show()
+            return
+        }
+
+        showProgressDialog(getString(R.string.processing_payment))
         
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 // Extract amount from price string
-                val amount = MastercardPaymentService.extractAmount(totalPrice)
+                val amount = gatewayAmount
                 
-                // Create a session for native card collection
-                val sessionResult = MastercardPaymentService.createSession()
+                // Initiate hosted checkout session (supports 3D Secure)
+                val checkoutResult = MastercardPaymentService.initiateCheckout(
+                    orderId = orderId,
+                    amount = amount,
+                    currency = "JOD"
+                )
                 
-                if (sessionResult.isSuccess) {
-                    val sessionResponse = sessionResult.getOrNull()!!
+                if (checkoutResult.isSuccess) {
+                    val sessionResponse = checkoutResult.getOrNull()!!
                     hideProgressDialog()
-                    Log.d("Payment", "Session created: ${sessionResponse.session.id}")
+                    Log.d(
+                        TAG,
+                        "Hosted checkout session created -> sessionId=${sessionResponse.session.id}, " +
+                            "result=${sessionResponse.result}, updateStatus=${sessionResponse.session.updateStatus}"
+                    )
+                    PaymentLogger.d(
+                        "PaymentScreen",
+                        "Opening hosted checkout (3DS supported) -> sessionId=${sessionResponse.session.id}"
+                    )
                     
-                    // Open native card payment activity with session ID
-                    val intent = Intent(this@PaymentActivity, NativeCardPaymentActivity::class.java)
-                    intent.putExtra(NativeCardPaymentActivity.EXTRA_ORDER_ID, orderId)
-                    intent.putExtra(NativeCardPaymentActivity.EXTRA_AMOUNT, amount)
-                    intent.putExtra(NativeCardPaymentActivity.EXTRA_SESSION_ID, sessionResponse.session.id)
+                    val intent = Intent(this@PaymentActivity, MastercardPaymentActivity::class.java)
+                    intent.putExtra(MastercardPaymentActivity.EXTRA_ORDER_ID, orderId)
+                    intent.putExtra(MastercardPaymentActivity.EXTRA_AMOUNT, amount)
+                    intent.putExtra(MastercardPaymentActivity.EXTRA_SESSION_ID, sessionResponse.session.id)
                     startActivityForResult(intent, PAYMENT_REQUEST_CODE)
                 } else {
                     hideProgressDialog()
-                    val error = sessionResult.exceptionOrNull() ?: Exception("Unknown error")
+                    val error = checkoutResult.exceptionOrNull() ?: Exception("Unknown error")
                     Toast.makeText(
                         this@PaymentActivity,
                         "Failed to initialize payment: ${error.message}",
                         Toast.LENGTH_LONG
                     ).show()
-                    Log.e("Payment", "Failed to create session", error)
+                    Log.e(TAG, "Failed to create gateway session", error)
                 }
             } catch (e: Exception) {
                 hideProgressDialog()
@@ -108,7 +174,7 @@ class PaymentActivity : BaseActivity() {
                     "Payment error: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
-                Log.e("Payment", "Payment error", e)
+                Log.e(TAG, "Payment initialization error", e)
             }
         }
     }
@@ -117,17 +183,30 @@ class PaymentActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         
         if (requestCode == PAYMENT_REQUEST_CODE) {
+            Log.d(TAG, "Payment activity result -> resultCode=$resultCode, data=$data")
             when (resultCode) {
-                NativeCardPaymentActivity.RESULT_PAYMENT_SUCCESS -> {
-                    // Payment successful, complete checkout with payment method "2"
-                    data?.getStringExtra("orderId")?.let {
-                        viewmodel.retrieveCheckout(it, "2") // "2" for online payment
-                    } ?: run {
-                        viewmodel.retrieveCheckout(orderId, "2")
-                    }
+                MastercardPaymentActivity.RESULT_PAYMENT_SUCCESS -> {
+                    val checkoutOrderId = data?.getStringExtra("orderId") ?: orderId
+                    val sessionId = data?.getStringExtra("sessionId").orEmpty()
+                    val gatewayAmount = data?.getStringExtra("amount").orEmpty()
+                    val transactionId = data?.getStringExtra("transactionId").orEmpty()
+                    Log.d(
+                        TAG,
+                        "Gateway PAY approved. Starting backend checkout -> " +
+                            "orderId=$checkoutOrderId, sessionId=$sessionId, amount=$gatewayAmount, " +
+                            "transactionId=$transactionId"
+                    )
+                    PaymentLogger.d(
+                        "PaymentScreen",
+                        "Gateway PAY approved. Starting backend checkout -> " +
+                            "orderId=$checkoutOrderId, sessionId=$sessionId, amount=$gatewayAmount, " +
+                            "transactionId=$transactionId, paymentMethod=2"
+                    )
+                    startBackendCheckout("2", checkoutOrderId)
                 }
-                NativeCardPaymentActivity.RESULT_PAYMENT_FAILED -> {
-                    Toast.makeText(this, "Payment was cancelled or failed", Toast.LENGTH_SHORT).show()
+                MastercardPaymentActivity.RESULT_PAYMENT_FAILED -> {
+                    Log.w(TAG, "Gateway payment cancelled or failed")
+                    Toast.makeText(this, getString(R.string.payment_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -145,8 +224,20 @@ class PaymentActivity : BaseActivity() {
         progressDialog?.dismiss()
         progressDialog = null
     }
+
+    private fun navigateToCartWithSuccess(message: String) {
+        PaymentLogger.d("PaymentScreen", "Navigating to cart with success -> message=$message")
+        val intent = Intent(this, CartActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra(CartActivity.EXTRA_CHECKOUT_SUCCESS, true)
+            putExtra(CartActivity.EXTRA_SUCCESS_MESSAGE, message)
+        }
+        startActivity(intent)
+        finish()
+    }
     
     companion object {
+        private const val TAG = "PaymentActivity***********"
         private const val PAYMENT_REQUEST_CODE = 1001
     }
 
@@ -185,31 +276,82 @@ class PaymentActivity : BaseActivity() {
 
     private fun getCheckout() {
         viewmodel.getCheckout().observe(this) { result ->
+            if (result == null || !isCheckoutPending) {
+                return@observe
+            }
+
             when (result) {
                 is NetworkResults.Success -> {
-                    if (result.data.msg.status == 200) {
-                        Toast.makeText(this, result.data.msg.message, Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, HomeActivity::class.java)
-                        startActivity(intent)
-                        finishAffinity()
+                    val status = result.data.msg.status
+                    val message = result.data.msg.message
+                    Log.d(
+                        TAG,
+                        "Backend checkout response -> httpSuccess=true, status=$status, message=$message, " +
+                            "isCompletingOnlineCheckout=$isCompletingOnlineCheckout"
+                    )
+                    PaymentLogger.d(
+                        "BackendCheckout",
+                        "Response -> status=$status, message=$message, online=$isCompletingOnlineCheckout"
+                    )
+
+                    hideProgressDialog()
+
+                    val wasOnlineCheckout = isCompletingOnlineCheckout
+                    isCheckoutPending = false
+
+                    if (status == 200) {
+                        isCompletingOnlineCheckout = false
+                        if (wasOnlineCheckout) {
+                            Log.d(TAG, "Online payment completed successfully after backend confirmation")
+                            navigateToCartWithSuccess(getString(R.string.payment_success_message))
+                        } else {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                            finishAffinity()
+                        }
                     } else {
-                        Toast.makeText(this, result.data.msg.message, Toast.LENGTH_SHORT).show()
+                        if (wasOnlineCheckout) {
+                            Log.e(
+                                TAG,
+                                "Gateway succeeded but backend checkout failed -> status=$status, message=$message"
+                            )
+                        }
+                        isCompletingOnlineCheckout = false
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                     }
+                    viewmodel.clearCheckoutResult()
                 }
 
                 is NetworkResults.Error -> {
-                    Log.d("ErrorCheckOut", result.exception.localizedMessage.toString())
+                    hideProgressDialog()
+                    isCheckoutPending = false
+                    isCompletingOnlineCheckout = false
+                    Log.e(TAG, "Backend checkout network error", result.exception)
                     Toast.makeText(
                         this,
-                        result.exception.localizedMessage.toString(),
+                        getString(R.string.something_wrong),
                         Toast.LENGTH_SHORT
                     ).show()
+                    viewmodel.clearCheckoutResult()
                 }
 
                 is NetworkResults.ErrorMessage -> {
-                    Toast.makeText(this, result.data?.msg?.message.toString(), Toast.LENGTH_SHORT)
-                        .show()
-                    Log.d("ERORRSAS", result.data.toString())
+                    hideProgressDialog()
+                    isCheckoutPending = false
+                    val message = result.data?.msg?.message.orEmpty()
+                    val status = result.data?.msg?.status
+                    Log.e(
+                        TAG,
+                        "Backend checkout error message -> status=$status, message=$message, " +
+                            "isCompletingOnlineCheckout=$isCompletingOnlineCheckout"
+                    )
+                    if (isCompletingOnlineCheckout) {
+                        Log.e(TAG, "Gateway succeeded but backend checkout returned error response")
+                    }
+                    isCompletingOnlineCheckout = false
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    viewmodel.clearCheckoutResult()
                 }
 
                 else -> {

@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import com.blueray.marasy.MarasyApp
 import com.blueray.marasy.adapters.CustomSpinnerAdapter
 import com.blueray.marasy.databinding.ActivityRegisterLocationBinding
 import com.blueray.marasy.model.NetworkResults
@@ -41,7 +42,8 @@ class RegisterLocationActivity : BaseActivity() {
         }
 
         binding.continueBtn.setOnClickListener {
-
+            val deviceId = MarasyApp.getDeviceId(this)
+            Log.d("****RegisterLocation", "device_id: $deviceId")
             viewmodel.retrieveAddUser(
                 phone = PHONE,
                 area = AREA,
@@ -50,12 +52,11 @@ class RegisterLocationActivity : BaseActivity() {
                 lat = LAT,
                 lon = LONG,
                 detailed_address = binding.addressInDetailEt.text.toString(),
-                playerId = "12345",
+                playerId = deviceId,
                 sector = SECTOR,
                 email = EMAIL,
                 address_line1 = binding.titleEt.text.toString()
             )
-
         }
 
         viewmodel.retrieveCities()

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -99,11 +100,12 @@ class ProductDetailsActivity : BaseActivity() {
                 }
             } else {
                 // Check if a variation is selected (vid is not empty)
+                Log.d("****vid3", vid)
                 if (vid.isEmpty()) {
                     showErrorToast(this, getString(R.string.please_select_all_options))
                     return@setOnClickListener
                 }
-                
+
                 viewmodel.addToCart(
                     vid,
                     formatPrice(binding.priceTv.text.toString()),
@@ -181,6 +183,7 @@ class ProductDetailsActivity : BaseActivity() {
 
                         // Handle unknown_price
                         if (product.unknown_price == 1) {
+
                             // Hide attributes and add to cart
                             binding.attributesRv.visibility = View.GONE
                             binding.addToCartCard.visibility = View.GONE
@@ -194,6 +197,8 @@ class ProductDetailsActivity : BaseActivity() {
                             val attributesList = product.attributes.toMutableList()
                             val variationsList = product.variations
 
+                            Log.d("****vid attributesList", attributesList.toString())
+                            Log.d("****vid variationsList", variationsList.toString())
                             // Check if attributes list is empty
                         if (attributesList.isEmpty() && variationsList.isNotEmpty()) {
                             // No attributes - use first variation directly
@@ -215,6 +220,7 @@ class ProductDetailsActivity : BaseActivity() {
                                         clearPrice()
                                         resetQuantityBoundsToDefault()
                                         vid = ""
+                                        Log.d("****vid1", vid)
                                     }
                                 }
                                 // , placeholderLabel = "اختر"   // optional
@@ -225,6 +231,7 @@ class ProductDetailsActivity : BaseActivity() {
 
                             // Initial state
                             attributesAdapter?.getSelectedVariation()?.let { v ->
+                                Log.d("****vid0", v.toString())
                                 applyVariationUI(v)
                             } ?: run {
                                 clearPrice()
@@ -334,6 +341,7 @@ class ProductDetailsActivity : BaseActivity() {
         // Price + VID
         setPriceText(formatPrice(v.price))
         vid = v.vid
+        Log.d("****vid2", v.toString())
 
         // Handle offer display
         if (v.offerFlag == 1 && v.old_price.isNotEmpty() && v.old_price != "0" && v.old_price != "null") {
@@ -417,13 +425,14 @@ class ProductDetailsActivity : BaseActivity() {
     }
     
     private fun setupCollapsibleCards() {
-        // Description card - starts expanded
-        var isDescriptionExpanded = true
+        // Description card - starts collapsed
+        var isDescriptionExpanded = false
+        binding.descriptionContent.visibility = View.GONE
         binding.descriptionHeader.setOnClickListener {
             isDescriptionExpanded = !isDescriptionExpanded
             toggleCard(binding.descriptionContent, binding.descriptionExpandIcon, isDescriptionExpanded)
         }
-        
+
         // Steps for use card - starts collapsed
         var isStepsExpanded = false
         binding.stepsForUseHeader.setOnClickListener {

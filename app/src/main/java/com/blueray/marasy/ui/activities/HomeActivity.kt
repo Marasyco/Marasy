@@ -73,31 +73,10 @@ class HomeActivity : BaseActivity() {
     private fun navigateToBottomBarDestination(index: Int) {
         when (index) {
             0 -> {
-                // Navigate to home
-                try {
-                    navController.navigate(R.id.homeFragment, null, 
-                        androidx.navigation.NavOptions.Builder()
-                            .setPopUpTo(R.id.homeFragment, true)
-                            .build()
-                    )
-                } catch (e: Exception) {
-                    navController.popBackStack(R.id.homeFragment, false)
-                }
+                startActivity(Intent(this, ContactUsActivity::class.java))
             }
 
             1 -> {
-                try {
-                    navController.navigate(R.id.allCategoriesFragment, null,
-                        androidx.navigation.NavOptions.Builder()
-                            .setPopUpTo(R.id.homeFragment, false)
-                            .build()
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-            3 -> {
                 if (HelperUtils.isGuest(this)) {
                     HelperUtils.showLoginRequiredDialog(this) {
                         val intent = Intent(this, LoginActivity::class.java)
@@ -116,9 +95,9 @@ class HomeActivity : BaseActivity() {
                 }
             }
 
-            4 -> {
+            3 -> {
                 try {
-                    navController.navigate(R.id.contactUsActivity, null,
+                    navController.navigate(R.id.allCategoriesFragment, null,
                         androidx.navigation.NavOptions.Builder()
                             .setPopUpTo(R.id.homeFragment, false)
                             .build()
@@ -126,6 +105,21 @@ class HomeActivity : BaseActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+
+            }
+
+            4 -> {
+                // Navigate to home
+                try {
+                    navController.navigate(R.id.homeFragment, null,
+                        androidx.navigation.NavOptions.Builder()
+                            .setPopUpTo(R.id.homeFragment, true)
+                            .build()
+                    )
+                } catch (e: Exception) {
+                    navController.popBackStack(R.id.homeFragment, false)
+                }
+
             }
         }
     }
@@ -229,18 +223,15 @@ class HomeActivity : BaseActivity() {
                 }
 
                 R.id.contactUs -> {
-                    navController.navigate(R.id.contactUsActivity, null,
-                        androidx.navigation.NavOptions.Builder()
-                            .setPopUpTo(R.id.homeFragment, false)
-                            .setLaunchSingleTop(true)
-                            .build()
-                    )
+                    startActivity(Intent(this, ContactUsActivity::class.java))
                     closeDrawer()
                     true
                 }
 
                 R.id.language -> {
-                    val intent = Intent(this, ChangeLanguageActivity::class.java)
+                    val intent = Intent(this, ChangeLanguageActivity::class.java).apply {
+                        putExtra(ChangeLanguageActivity.EXTRA_RESTART, ChangeLanguageActivity.RESTART_FROM_HOME)
+                    }
                     startActivity(intent)
                     closeDrawer()
                     true
@@ -284,12 +275,8 @@ class HomeActivity : BaseActivity() {
             val sharedPreferences =
                 getSharedPreferences(HelperUtils.SHARED_PREF, MODE_PRIVATE)
 
-            sharedPreferences.edit().apply {
-                putString("uid", "0")
+            HelperUtils.logout(this)
 
-                putString("role", "0")
-
-            }.apply()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finishAffinity()

@@ -3,6 +3,7 @@ package com.blueray.marasy.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -56,12 +57,16 @@ class ProductsActivity : BaseActivity() {
             finish()
         }
 
-        // Show cart icon and handle navigation
-        binding.includedTab.cartButton.visibility = android.view.View.VISIBLE
+        // Show cart icon with badge and handle navigation
+        binding.includedTab.cartButton.visibility = View.VISIBLE
+        binding.includedTab.cartCountTv.visibility = View.VISIBLE
         binding.includedTab.cartButton.setOnClickListener {
             val intent = Intent(this, CartActivity::class.java)
             startActivity(intent)
         }
+
+        viewmodel.retrieveCart()
+        observeCart()
 
         if (isFromTrademark && trademarkId != null) {
             // Show products filtered by trademark
@@ -153,6 +158,32 @@ class ProductsActivity : BaseActivity() {
                 .replace(R.id.productsContainer, productsFragment, fragmentTag)
                 .commit()
         }
+    }
+
+    private fun observeCart() {
+        viewmodel.getViewCart().observe(this) { result ->
+            when (result) {
+                is NetworkResults.Success -> {
+                    if (result.data.msg.status == 200) {
+                        binding.includedTab.cartCountTv.text =
+                            result.data.data.items.count().toString()
+                    } else {
+                        binding.includedTab.cartCountTv.text = "0"
+                    }
+                }
+                is NetworkResults.Error -> {
+                    binding.includedTab.cartCountTv.text = "0"
+                }
+                else -> {
+                    binding.includedTab.cartCountTv.text = "0"
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewmodel.retrieveCart()
     }
 
     // Inner adapter class for Activity context

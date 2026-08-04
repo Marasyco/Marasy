@@ -167,6 +167,7 @@ class AddAddressActivity : BaseActivity() {
                 }
 
                 is NetworkResults.Error -> {
+
                     showErrorToast(this, result.exception.message.toString())
                 }
 
@@ -179,8 +180,7 @@ class AddAddressActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.d("ADDREESSS", ADD_LAT ?: "LAT null")
-        Log.d("ADDREESSS", ADD_LONG ?: "LONG null")
         binding.mapLocation.text = ADD_AREA_TEXT
+        binding.titleEt.setText(ADD_AREA_TEXT)
     }
 }

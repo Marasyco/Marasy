@@ -51,6 +51,8 @@ class ShopperOrderDetailsActivity : BaseActivity() {
             binding.startShoppingButton.show()
         }
         binding.startShoppingButton.setOnClickListener {
+            binding.progress.show()
+            binding.startShoppingButton.hide()
             viewmodel.retrieveStartEndEmployeeOrder(orderId, "1", "1")
 
         }
@@ -59,6 +61,8 @@ class ShopperOrderDetailsActivity : BaseActivity() {
 
     private fun getStartOrder() {
         viewmodel.getStartEndEmployeeOrder().observe(this) { result ->
+            binding.startShoppingButton.show()
+            binding.progress.hide()
             when (result) {
                 is NetworkResults.Success -> {
                     if (result.data.msg.status == 200) {

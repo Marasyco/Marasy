@@ -386,7 +386,7 @@ class AttributesAdapter(
                 }
             }
         }
-        return candidates.singleOrNull()
+        return candidates.firstOrNull()
     }
 
     fun getSelectedVid(): String? = getSelectedVariation()?.vid

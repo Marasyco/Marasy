@@ -49,12 +49,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     //user login
     private val loginUserLiveData = MutableLiveData<NetworkResults<MessageResponse>>()
 
-    fun retrieveLoginUser(phone: String) {
+    fun retrieveLoginUser(phone: String, deviceId: String = "") {
         viewModelScope.launch {
             loginUserLiveData.postValue(
                 repo.loginUser(
                     phone,
-                    language
+                    language,
+                    deviceId
                 )
             )
         }
@@ -85,7 +86,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveHomeSlider() {
         viewModelScope.launch {
             homeSliderLiveData.postValue(
-                repo.homeSlider()
+                repo.homeSlider(language)
             )
         }
     }
@@ -98,7 +99,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveMainCategories() {
         viewModelScope.launch {
             mainCategoriesLiveData.postValue(
-                repo.getCategories()
+                repo.getCategories(language)
             )
         }
     }
@@ -111,7 +112,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveTrademarks() {
         viewModelScope.launch {
             trademarksLiveData.postValue(
-                repo.getTrademarks()
+                repo.getTrademarks(language)
             )
         }
     }
@@ -124,7 +125,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveSubCategories(parentId: String) {
         viewModelScope.launch {
             subCategoriesLiveData.postValue(
-                repo.getSubCategories(uid, parentId)
+                repo.getSubCategories(uid, parentId, language)
             )
         }
     }
@@ -137,7 +138,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveProductDetails(pid: String) {
         viewModelScope.launch {
             productDetailsLiveData.postValue(
-                repo.getProductDetails(uid, pid)
+                repo.getProductDetails(uid, pid, language)
             )
         }
     }
@@ -156,7 +157,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             categoryProductsLiveData.postValue(
                 repo.getCategoryProducts(
-                    uid, category, subCategory, page
+                    uid, category, subCategory, page, language
                 )
             )
         }
@@ -174,7 +175,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             trademarkProductsLiveData.postValue(
                 repo.getTrademarkProducts(
-                    uid, trademarkId, page
+                    uid, trademarkId, page, language
                 )
             )
         }
@@ -220,7 +221,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveFavoriteProducts() {
         viewModelScope.launch {
             favoriteProductsLiveData.postValue(
-                repo.getFavoriteProducts(uid)
+                repo.getFavoriteProducts(uid, language)
             )
         }
     }
@@ -233,7 +234,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveMyNotifications() {
         viewModelScope.launch {
             notificationsLiveData.postValue(
-                repo.getMyNotifications(uid)
+                repo.getMyNotifications(uid, language)
             )
         }
     }
@@ -246,7 +247,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveCart() {
         viewModelScope.launch {
             viewCartLiveData.postValue(
-                repo.viewCart(uid)
+                repo.viewCart(uid, language)
             )
         }
     }
@@ -297,7 +298,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveMyAddresses() {
         viewModelScope.launch {
             getMyAddressLiveData.postValue(
-                repo.getMyAddresses(uid)
+                repo.getMyAddresses(uid, language)
             )
         }
     }
@@ -310,7 +311,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveViewProfile() {
         viewModelScope.launch {
             viewProfileLiveData.postValue(
-                repo.viewProfile(uid)
+                repo.viewProfile(uid, language)
             )
         }
     }
@@ -323,7 +324,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveCheckout(
         order_id: String,
         payment_method: String,
-
+        note: String,
         ) {
         viewModelScope.launch {
             checkoutLiveData.postValue(
@@ -331,6 +332,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     uid,
                     order_id,
                     payment_method,
+                    note,
                     language
                 )
             )
@@ -339,6 +341,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getCheckout() = checkoutLiveData
 
+    fun clearCheckoutResult() {
+        checkoutLiveData.value = null
+    }
+
     //search
     private val searchLiveData = MutableLiveData<NetworkResults<GetProductsResponse>>()
 
@@ -346,7 +352,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             searchLiveData.postValue(
                 repo.searchProducts(
-                    uid, search_text, page, search_flag
+                    uid, search_text, page, search_flag, language
                 )
             )
         }
@@ -377,7 +383,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveSectors() {
         viewModelScope.launch {
             sectorsLiveData.postValue(
-                repo.getSectors()
+                repo.getSectors(language)
             )
         }
     }
@@ -390,7 +396,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveSubSectors(parent_tid: String) {
         viewModelScope.launch {
             subSectorsLiveData.postValue(
-                repo.getSubSectors(parent_tid)
+                repo.getSubSectors(parent_tid, language)
             )
         }
     }
@@ -403,7 +409,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveAreas(parent_tid: String) {
         viewModelScope.launch {
             getAreasLiveData.postValue(
-                repo.getAreas(parent_tid)
+                repo.getAreas(parent_tid, language)
             )
         }
     }
@@ -416,7 +422,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveCities() {
         viewModelScope.launch {
             getCitiesLiveData.postValue(
-                repo.getCities()
+                repo.getCities(language)
             )
         }
     }
@@ -485,7 +491,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 repo.setDefaultAddress(
                     uid,
                     profile_id,
-                    "1"
+                    "1",
+                    language
                 )
             )
         }
@@ -502,7 +509,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             deleteAddressLiveData.postValue(
                 repo.deleteAddress(
-                    uid, profile_id
+                    uid, profile_id, language
                 )
             )
         }
@@ -529,6 +536,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     lat = lat,
                     lon = lon,
                     city_and_area = cityAndArea,
+                    lang = language,
                 )
             )
         }
@@ -542,7 +550,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveAboutUs() {
         viewModelScope.launch {
             aboutUsLiveData.postValue(
-                repo.aboutUs()
+                repo.aboutUs(language)
             )
         }
     }
@@ -555,7 +563,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrievePrivacyPolicy() {
         viewModelScope.launch {
             privacyPolicyLiveData.postValue(
-                repo.privacyPolicy()
+                repo.privacyPolicy(language)
             )
         }
     }
@@ -569,7 +577,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun retrieveTermsAndConditions() {
         viewModelScope.launch {
             termsAndConditionsLiveData.postValue(
-                repo.privacyPolicy()
+                repo.termsAndConditions(language)
             )
         }
     }
@@ -750,7 +758,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     ) {
         viewModelScope.launch {
             getAddressDetailsLiveData.postValue(
-                repo.getAddressDetails(profile_id)
+                repo.getAddressDetails(profile_id, language)
             )
         }
     }
@@ -771,7 +779,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             editAddressLiveData.postValue(
                 repo.editAddress(
-                    uid, profile_id, city_and_area, address_line1, detailed_address, lat, lon
+                    uid, profile_id, city_and_area, address_line1, detailed_address, lat, lon, language
                 )
             )
         }
@@ -792,6 +800,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     uid,
                     full_name,
                     email,
+                    language,
                 )
             )
         }
@@ -822,7 +831,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             viewOrderDetailsLiveData.postValue(
                 repo.viewOrderDetails(
-                    uid, order_id
+                    uid, order_id, language
                 )
             )
         }
@@ -838,11 +847,24 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             reOrderLiveData.postValue(
                 repo.reOrder(
                     uid,
-                    order_id
+                    order_id,
+                    language
                 )
             )
         }
     }
 
     fun getReOrder() = reOrderLiveData
+
+    private val contactUsLiveData = MutableLiveData<NetworkResults<MessageResponse>>()
+
+    fun submitContactUs(phone: String, notes: String, fullName: String) {
+        viewModelScope.launch {
+            contactUsLiveData.postValue(
+                repo.contactUs(phone, notes, fullName, language)
+            )
+        }
+    }
+
+    fun getContactUs() = contactUsLiveData
 }
