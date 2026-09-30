@@ -11,8 +11,8 @@ android {
         applicationId = "com.blueray.marasy"
         minSdk = 24
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

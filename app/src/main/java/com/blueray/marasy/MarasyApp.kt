@@ -8,7 +8,7 @@ import com.onesignal.OneSignal
 class MarasyApp : Application() {
 
     companion object {
-        private const val ONESIGNAL_APP_ID = "642b49ce-f58b-465c-b018-305c68b679fb"
+        private const val ONESIGNAL_APP_ID = "a7fe09e1-d1a5-4217-a16f-f5e47aea0c2b"
         private const val PREF_PLAYER_ID = "onesignal_player_id"
 
         fun getDeviceId(context: Context): String {
